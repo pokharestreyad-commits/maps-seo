@@ -1291,6 +1291,15 @@ ${postsList}
           showToast(successMsg);
           boostScore(8);
 
+          // Save locally as well for 100% instant UI resiliency
+          if (json.post) {
+            try {
+              const localQueue = JSON.parse(localStorage.getItem('maps_seo_scheduled') || '[]');
+              localQueue.unshift(json.post);
+              localStorage.setItem('maps_seo_scheduled', JSON.stringify(localQueue));
+            } catch {}
+          }
+
           // Reset composer form
           if (textarea) textarea.value = '';
           if (charCount) charCount.textContent = '0 / 1500';
@@ -1322,7 +1331,20 @@ ${postsList}
       fetch('/api/schedule')
         .then(r => r.json())
         .then(d => {
-          const items = d.items || [];
+          const serverItems = d.items || [];
+          let clientItems = [];
+          try {
+            clientItems = JSON.parse(localStorage.getItem('maps_seo_scheduled') || '[]');
+          } catch {}
+
+          const map = new Map();
+          [...clientItems, ...serverItems].forEach(item => {
+            if (item && item.id && !map.has(item.id)) {
+              map.set(item.id, item);
+            }
+          });
+          const items = Array.from(map.values());
+
           // Filter to posts (items with body/hook or post-like type)
           const posts = items.filter(i => i.body || i.hook || (i.id && i.id.startsWith('post')) || (i.id && i.id.startsWith('custom')));
 
@@ -1498,6 +1520,12 @@ function showToast(msg) {
 window.deleteScheduledPost = async function(id) {
   if (!confirm('هل تريد بالتأكيد حذف هذا المنشور من جدول النشر؟')) return;
   try {
+    try {
+      let localQueue = JSON.parse(localStorage.getItem('maps_seo_scheduled') || '[]');
+      localQueue = localQueue.filter(i => i.id !== id);
+      localStorage.setItem('maps_seo_scheduled', JSON.stringify(localQueue));
+    } catch {}
+
     const res = await fetch(`/api/schedule?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'تعذر حذف المنشور');

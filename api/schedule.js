@@ -15,20 +15,31 @@ function getQueueFilePath() {
 }
 
 function readQueue() {
-  const filePath = getQueueFilePath();
-  if (fs.existsSync(filePath)) {
+  // 1. Check tmp file (written during runtime)
+  const tmpPath = path.join(os.tmpdir(), 'scheduled_posts.json');
+  if (fs.existsSync(tmpPath)) {
     try {
-      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    } catch {
-      return [];
-    }
+      const data = JSON.parse(fs.readFileSync(tmpPath, 'utf8'));
+      if (Array.isArray(data) && data.length > 0) return data;
+    } catch {}
+  }
+  // 2. Check bundled project file (seeded in git)
+  const rootPath = path.join(__dirname, '..', 'scheduled_posts.json');
+  if (fs.existsSync(rootPath)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(rootPath, 'utf8'));
+      if (Array.isArray(data)) return data;
+    } catch {}
   }
   return [];
 }
 
 function writeQueue(queue) {
   try {
-    fs.writeFileSync(getQueueFilePath(), JSON.stringify(queue, null, 2), 'utf8');
+    fs.writeFileSync(path.join(os.tmpdir(), 'scheduled_posts.json'), JSON.stringify(queue, null, 2), 'utf8');
+  } catch {}
+  try {
+    fs.writeFileSync(path.join(__dirname, '..', 'scheduled_posts.json'), JSON.stringify(queue, null, 2), 'utf8');
   } catch {}
 }
 
