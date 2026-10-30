@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node dev-server.js",
     "dev": "node dev-server.js",
-    "test": "node test-run.js"
+    "test": "node test-run.js",
+    "login": "node login-session.js",
+    "post-now": "node run-scheduler.js"
   },
   "keywords": [
     "local-seo",
