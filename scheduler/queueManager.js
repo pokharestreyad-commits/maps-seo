@@ -30,7 +30,9 @@ function loadQueue() {
  * @param {Array} queue 
  */
 function saveQueue(queue) {
-  fs.writeFileSync(QUEUE_FILE, JSON.stringify(queue, null, 2), 'utf8');
+  try {
+    fs.writeFileSync(QUEUE_FILE, JSON.stringify(queue, null, 2), 'utf8');
+  } catch {}
 }
 
 /**

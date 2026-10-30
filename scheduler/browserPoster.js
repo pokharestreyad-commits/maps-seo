@@ -7,13 +7,20 @@ const path = require('path');
 const fs = require('fs');
 const puppeteer = require('puppeteer-core');
 
-const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
-const SESSION_DIR = path.join(__dirname, '..', 'session_data');
+const os = require('os');
 
-// Ensure session directory exists to store login cookies
-if (!fs.existsSync(SESSION_DIR)) {
-  fs.mkdirSync(SESSION_DIR, { recursive: true });
+const CHROME_PATH = process.env.CHROME_PATH || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+
+function getSessionDir() {
+  const baseDir = process.env.VERCEL || process.env.NETLIFY ? os.tmpdir() : path.join(__dirname, '..');
+  const dir = path.join(baseDir, 'session_data');
+  try {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  } catch {}
+  return dir;
 }
+
+const SESSION_DIR = getSessionDir();
 
 /**
  * Opens a visible browser window so the user can login to their Google Account once.
@@ -128,8 +135,11 @@ async function publishPost(postData = {}) {
     }
 
     // Save screenshot for audit/verification
-    const screenshotDir = path.join(__dirname, '..', 'screenshots');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
+    const baseDir = process.env.VERCEL || process.env.NETLIFY ? os.tmpdir() : path.join(__dirname, '..');
+    const screenshotDir = path.join(baseDir, 'screenshots');
+    try {
+      if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
+    } catch {}
     
     const screenshotPath = path.join(screenshotDir, `post-run-${Date.now()}.png`);
     await page.screenshot({ path: screenshotPath });
