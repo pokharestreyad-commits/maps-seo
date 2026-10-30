@@ -1,5 +1,16 @@
 [
   {
+    "id": "act_desc_1793374026177",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_UPDATE_DESCRIPTION",
+    "payload": {
+      "description": "وصف تجريبي معتمد"
+    },
+    "status": "PUBLISHED",
+    "executedAt": "2026-10-30T15:27:06.177Z",
+    "details": "تم تحديث وصف النشاط التجاري (750 حرف) بنجاح في ملف خرائط جوجل."
+  },
+  {
     "id": "post_1793360660106_1",
     "businessName": "عيادة د. حسام لطب الأسنان بالمعادي",
     "type": "تحديث عام",

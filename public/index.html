@@ -311,7 +311,95 @@
                 <p class="tab-subdesc">النشر الأسبوعي المستمر يرسل إشارات حية (Freshness Signals) لخوارزميات جوجل، مما يرفع تصنيف النشاط في خوارزمية البروز والشهرة (Prominence).</p>
               </div>
               <div class="calendar-actions">
+                <button class="btn btn-primary" id="toggleComposerBtn">✍️ إنشاء مشاركة جديدة مع الصور</button>
                 <button class="btn btn-secondary" id="exportScheduleBtn">تصدير الجدول (CSV) 📥</button>
+              </div>
+            </div>
+
+            <!-- Google Post Composer Modal / Box (مُنشئ المنشورات مع رفع الصور وجدولتها) -->
+            <div class="post-composer-card" id="postComposerBox">
+              <div class="composer-header">
+                <div class="composer-title-wrap">
+                  <span class="composer-icon">✍️</span>
+                  <div>
+                    <h4 class="composer-title">إضافة مشاركة جديدة لخرائط جوجل (Add Google Update)</h4>
+                    <p class="composer-subtitle">اكتب المنشور وارفع الصور ليتم النشر أو الجدولة تلقائياً 24/7 دون الحاجة لفتح جوجل</p>
+                  </div>
+                </div>
+                <!-- Post Type Tabs -->
+                <div class="composer-type-tabs">
+                  <button type="button" class="type-tab-btn active" data-type="تعديل">✓ تعديل / تحديث</button>
+                  <button type="button" class="type-tab-btn" data-type="عرض">🏷️ عرض ترويجي</button>
+                  <button type="button" class="type-tab-btn" data-type="حدث">📅 حدث وفعالية</button>
+                </div>
+              </div>
+
+              <div class="composer-grid">
+                <!-- Left: Media Upload Zone -->
+                <div class="composer-media-zone">
+                  <div class="media-dropzone" id="mediaDropzone">
+                    <input type="file" id="composerFileInput" accept="image/*" style="display: none;">
+                    <div id="dropzonePrompt" class="dropzone-inner">
+                      <div class="drop-icon">📸</div>
+                      <div class="drop-title">سحب صور وفيديوهات إلى هذه المنطقة</div>
+                      <div class="drop-or">أو</div>
+                      <button type="button" class="btn btn-secondary btn-sm" id="choosePhotoBtn">📁 اختيار صور من جهازك</button>
+                      <button type="button" class="btn btn-ghost btn-sm" id="aiGeneratePhotoBtn" style="color: #60a5fa; margin-top: 6px;">🎨 توليد صورة مناسبة بالذكاء الاصطناعي</button>
+                    </div>
+                    <!-- Image Preview Container -->
+                    <div id="mediaPreviewWrap" class="media-preview-wrap hidden">
+                      <img id="mediaPreviewImg" src="" alt="معاينة الصورة" class="preview-img">
+                      <button type="button" class="remove-photo-btn" id="removePhotoBtn" title="حذف الصورة">✕</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Description & Action Details -->
+                <div class="composer-content-zone">
+                  <div class="composer-field-group">
+                    <div class="field-top-bar">
+                      <label for="composerText">الوصف ومحتوى المشاركة:</label>
+                      <div class="field-actions">
+                        <button type="button" class="mini-btn-ai" id="composerAiDraftBtn">🤖 كتابة بالسيو الذكي</button>
+                        <span id="composerCharCount" class="char-count">0 / 1500</span>
+                      </div>
+                    </div>
+                    <textarea id="composerText" class="composer-textarea" rows="4" placeholder="اكتب هنا تفاصيل الخدمة أو العرض الترويجي لجذب الزبائن على خرائط جوجل..."></textarea>
+                  </div>
+
+                  <!-- CTA Button & Schedule Controls -->
+                  <div class="composer-controls-row">
+                    <div class="control-item">
+                      <label for="composerCtaSelect">إضافة زر إجراء (+ الزر):</label>
+                      <select id="composerCtaSelect" class="composer-select">
+                        <option value="اتصل الآن">📞 اتصل الآن (موصى به)</option>
+                        <option value="فتح الموقع">🔗 فتح الموقع الإلكتروني</option>
+                        <option value="حجز موعد">📅 حجز موعد</option>
+                        <option value="مزيد من المعلومات">ℹ️ مزيد من المعلومات</option>
+                        <option value="اطلب الآن">🛒 اطلب الآن</option>
+                        <option value="بدون زر">بدون زر</option>
+                      </select>
+                    </div>
+
+                    <div class="control-item">
+                      <div class="schedule-toggle-row">
+                        <label class="switch-wrap">
+                          <input type="checkbox" id="scheduleToggle">
+                          <span class="switch-slider"></span>
+                        </label>
+                        <span id="scheduleToggleLabel" style="font-size: 0.88rem; font-weight: 700;">جدولة هذه المشاركة</span>
+                      </div>
+                      <input type="datetime-local" id="composerDatetimeInput" class="composer-date-input hidden">
+                    </div>
+                  </div>
+
+                  <!-- Submit Action Button -->
+                  <div class="composer-footer">
+                    <button type="button" class="btn btn-primary btn-submit-post" id="submitComposerPostBtn">
+                      🚀 نشر وجدولة المشاركة بالصورة في خرائط جوجل بالنيابة عني
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -437,7 +525,10 @@
                 </div>
                 <p class="fix-desc">أضف الفئات المفقودة التي يستغلها منافسوك في المركز الأول لفتح مجالات بحث جديدة:</p>
                 <div class="fix-categories-list" id="fixCatList"></div>
-                <button class="copy-action-btn" id="copyCatsBtn">نسخ الفئات 📋</button>
+                <div class="fix-action-bar">
+                  <button class="btn btn-primary auto-exec-btn" id="autoApplyCatsBtn">⚡ تطبيق التصنيفات في جوجل بالنيابة عني</button>
+                  <button class="btn btn-secondary copy-action-btn" id="copyCatsBtn">نسخ الفئات 📋</button>
+                </div>
               </div>
 
               <!-- Fix 2: 750-Char Description -->
@@ -451,8 +542,11 @@
                 </div>
                 <p class="fix-desc">وصف مهيأ بمصطلحات السيو والخدمات المحلية ومنطقتك الجغرافية لزيادة مطابقة كلمات البحث:</p>
                 <div class="copy-box">
-                  <button class="copy-action-btn" onclick="copyElementText('fixDescContent')">نسخ الوصف 📋</button>
                   <div id="fixDescContent" class="box-content"></div>
+                </div>
+                <div class="fix-action-bar">
+                  <button class="btn btn-primary auto-exec-btn" id="autoApplyDescBtn">⚡ تطبيق وتحسين الوصف في جوجل مابس فوراً بالنيابة عني</button>
+                  <button class="btn btn-secondary copy-action-btn" onclick="copyElementText('fixDescContent')">نسخ الوصف 📋</button>
                 </div>
               </div>
 
@@ -467,7 +561,10 @@
                 </div>
                 <p class="fix-desc">الردود تعيد استهداف الكلمات الدلالية وتعطي خوارزميات جوجل إشارة تفاعل حي:</p>
                 <div id="fixReviewsBatch" class="cards-stack"></div>
-                <button class="btn btn-secondary" id="copyAllRepliesBtn" style="margin-top: 10px; font-size: 0.85rem;">نسخ جميع الردود كحزمة واحدة 📋</button>
+                <div class="fix-action-bar">
+                  <button class="btn btn-primary auto-exec-btn" id="autoReplyAllReviewsBtn">🤖 رد تلقائي ذكي على كل المراجعات بالنيابة عني</button>
+                  <button class="btn btn-secondary copy-action-btn" id="copyAllRepliesBtn">نسخ جميع الردود كحزمة 📋</button>
+                </div>
               </div>
 
               <!-- Fix 4: Media & Photos -->
@@ -484,6 +581,13 @@
                   <div class="media-tip-item">📸 رفع 3 صور حقيقية عالية الجودة لمقر العمل أو المنتجات أسبوعياً.</div>
                   <div class="media-tip-item">🏷️ تسمية ملفات الصور بأسماء الخدمات والمدينة قبل رفعها (Geo-Tagging).</div>
                 </div>
+                <div class="fix-action-bar" style="margin-top: 14px;">
+                  <label for="directPhotosInput" class="btn btn-primary auto-exec-btn" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                    📸 رفع ونشر باقة صور فورية في ملف جوجل بالنيابة عني
+                  </label>
+                  <input type="file" id="directPhotosInput" multiple accept="image/*" style="display: none;">
+                </div>
+                <div id="directPhotosPreview" class="photos-preview-strip"></div>
               </div>
             </div>
           </div>
