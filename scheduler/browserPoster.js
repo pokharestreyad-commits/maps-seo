@@ -16,7 +16,30 @@ async function getPuppeteer() {
 
 const os = require('os');
 
-const CHROME_PATH = process.env.CHROME_PATH || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+function getChromePath() {
+  if (process.env.CHROME_PATH) return process.env.CHROME_PATH;
+  if (process.platform === 'win32') {
+    const defaultWin = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+    const x86Win = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
+    return fs.existsSync(defaultWin) ? defaultWin : x86Win;
+  }
+  if (process.platform === 'darwin') {
+    return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  }
+  // Linux (Ubuntu / GitHub Actions VM)
+  const linuxPaths = [
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser'
+  ];
+  for (const p of linuxPaths) {
+    if (fs.existsSync(p)) return p;
+  }
+  return '/usr/bin/google-chrome';
+}
+
+const CHROME_PATH = getChromePath();
 
 function getSessionDir() {
   const baseDir = process.env.VERCEL || process.env.NETLIFY ? os.tmpdir() : path.join(__dirname, '..');
@@ -98,6 +121,8 @@ async function publishPost(postData = {}) {
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
         '--disable-blink-features=AutomationControlled',
         '--lang=ar-EG,ar'
       ]

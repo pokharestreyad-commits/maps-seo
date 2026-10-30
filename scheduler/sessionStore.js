@@ -96,6 +96,23 @@ function saveCloudSession(cookiesInput, metadata = {}) {
  * Retrieves the stored cloud session.
  */
 function getCloudSession() {
+  // 1. Check environment variable (e.g., GitHub Actions Secret or Vercel Env)
+  const envCookies = process.env.GOOGLE_SESSION_COOKIES || process.env.SESSION_COOKIES;
+  if (envCookies) {
+    try {
+      const normalized = normalizeCookies(envCookies);
+      if (normalized.length > 0) {
+        return {
+          updatedAt: new Date().toISOString(),
+          cookiesCount: normalized.length,
+          cookies: normalized,
+          metadata: { source: 'environment' }
+        };
+      }
+    } catch {}
+  }
+
+  // 2. Check cloud session file
   const filePath = getSessionFilePath();
   if (fs.existsSync(filePath)) {
     try {
