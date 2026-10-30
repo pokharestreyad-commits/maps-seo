@@ -8,7 +8,9 @@
     "dev": "node dev-server.js",
     "test": "node test-run.js",
     "login": "node login-session.js",
-    "post-now": "node run-scheduler.js"
+    "post-now": "node run-scheduler.js",
+    "worker": "node local-worker/localEngine.js",
+    "install-startup": "node install-startup.js"
   },
   "keywords": [
     "local-seo",

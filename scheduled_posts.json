@@ -82,10 +82,17 @@
     "callToAction": "اتصل الآن",
     "scheduledFor": "2026-10-30T16:34:06.626Z",
     "scheduledDateFormatted": "الجمعة، ٣٠ أكتوبر ٢٠٢٦",
-    "status": "PENDING",
+    "status": "PUBLISHED",
     "isImmediate": false,
     "createdAt": "2026-10-30T16:34:06.647Z",
-    "requiresSession": false
+    "requiresSession": false,
+    "publishedAt": "2026-10-30T18:38:00.523Z",
+    "executionDetails": {
+      "success": true,
+      "foundAddBtn": false,
+      "screenshotPath": "D:\\maps seo\\screenshots\\post-1793385476755.png",
+      "message": "تم تنفيذ وتأكيد نشر المشاركة في Google بنجاح."
+    }
   },
   {
     "id": "act_reply_1793378046623",
