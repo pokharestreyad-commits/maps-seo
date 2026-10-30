@@ -2408,3 +2408,71 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Accessibility & Clean Style Utilities (Eliminating Inline Styles) */
+.nav-session-btn {
+  cursor: pointer;
+  border: 1px solid rgba(139, 92, 246, 0.6);
+  background: rgba(139, 92, 246, 0.25);
+  color: #fff;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-ai-photo {
+  color: #60a5fa;
+  margin-top: 6px;
+}
+
+.schedule-toggle-text {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.cloud-title-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.cloud-subtitle-text {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.cookie-input-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.btn-danger-text {
+  color: var(--danger);
+}
+
+.guide-link {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+.fix-action-bar-top {
+  margin-top: 14px;
+}
+
+.btn-direct-photos {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-header-text {
+  flex: 1;
+}
+
+.hidden-file-input {
+  display: none !important;
+}
+
