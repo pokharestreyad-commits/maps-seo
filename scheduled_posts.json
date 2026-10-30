@@ -8,8 +8,10 @@
     "callToAction": "اتصل الآن",
     "scheduledFor": "2026-11-06T11:44:20.106Z",
     "scheduledDateFormatted": "الجمعة، ٦ نوفمبر ٢٠٢٦",
-    "status": "PENDING",
-    "createdAt": "2026-10-30T11:44:20.126Z"
+    "status": "PUBLISHED",
+    "createdAt": "2026-10-30T11:44:20.126Z",
+    "publishedAt": "2026-10-30T14:44:42.365Z",
+    "screenshot": "/home/runner/work/maps-seo/maps-seo/screenshots/post-run-1793371482151.png"
   },
   {
     "id": "post_1793365187179_1",
