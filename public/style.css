@@ -2441,6 +2441,16 @@ body {
   color: var(--text-muted);
 }
 
+.btn-ai-photo {
+  color: #60a5fa !important;
+  margin-top: 6px;
+}
+
+.toggle-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 .cookie-input-label {
   font-size: 0.85rem;
   font-weight: 700;
@@ -2475,4 +2485,385 @@ body {
 .hidden-file-input {
   display: none !important;
 }
+
+/* ==========================================================
+   Scheduled Posts Manager (صفحة إدارة المنشورات المجدولة)
+   ========================================================== */
+
+.tab-btn-highlight {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.22), rgba(139, 92, 246, 0.22)) !important;
+  border: 1px solid rgba(139, 92, 246, 0.5) !important;
+  color: #bfdbfe !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+  position: relative;
+}
+
+.tab-btn-highlight:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.35)) !important;
+  border-color: #a78bfa !important;
+  color: #ffffff !important;
+}
+
+.tab-btn-highlight.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4) !important;
+}
+
+.nav-schedule-btn {
+  cursor: pointer;
+  background: rgba(59, 130, 246, 0.16);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  color: #93c5fd;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.nav-schedule-btn:hover {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: #60a5fa;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.scheduled-manager-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.scheduled-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 20px;
+}
+
+.manager-title-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.manager-icon {
+  font-size: 2.2rem;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 14px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.manager-actions-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Schedule Stats Row */
+.schedule-stats-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.schedule-stat-pill {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.schedule-stat-pill strong {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-family: 'Outfit', sans-serif;
+}
+
+.stat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pending-dot {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+}
+
+.pub-dot {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.total-dot {
+  background: #60a5fa;
+  box-shadow: 0 0 8px #60a5fa;
+}
+
+/* Full Schedule Grid */
+.full-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 22px;
+}
+
+/* Post Manager Card */
+.post-manager-card {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.post-manager-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+}
+
+.post-manager-card.published {
+  border-left: 4px solid #10b981;
+}
+
+.post-manager-card.pending {
+  border-left: 4px solid #f59e0b;
+}
+
+.post-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 10px;
+}
+
+.post-type-pill {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  color: #c4b5fd;
+}
+
+.post-status-pill {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.post-status-pill.status-pub {
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.post-status-pill.status-pend {
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+.post-card-media {
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  background: #0f172a;
+  position: relative;
+}
+
+.post-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.post-card-media:hover img {
+  transform: scale(1.05);
+}
+
+.post-media-tag {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.post-card-body {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-card-text {
+  font-size: 0.88rem;
+  color: #e2e8f0;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.post-card-meta-box {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.post-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-cta-tag {
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.post-card-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btn-post-pub {
+  flex: 2;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.btn-post-pub:hover {
+  background: linear-gradient(135deg, #34d399, #10b981);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-post-pub.disabled {
+  background: rgba(255, 255, 255, 0.08);
+  color: #64748b;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-post-del {
+  flex: 1;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.btn-post-del:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+/* Empty Schedule State */
+.empty-schedule-card {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 50px 20px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+}
+
+.empty-schedule-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+
+.empty-schedule-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.empty-schedule-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 500px;
+  margin: 0 auto 22px;
+  line-height: 1.6;
+}
+
 

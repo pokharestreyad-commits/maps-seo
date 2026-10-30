@@ -1283,28 +1283,31 @@ ${postsList}
           const json = await res.json();
           if (!res.ok) throw new Error(json.error || 'تعذر النشر');
 
-          if (json.requiresAuth) {
-            openRealActionModal({
-              title: 'تم حفظ وجدولة المشاركة بالصور في طابورك السحابي',
-              subtitle: 'حالة المشاركة: جاهزة وبانتظار تفعيل الجلسة السحابية أو النشر المباشر',
-              explanation: 'تم حفظ المشاركة بالكامل في جدولك. للنشر التلقائي في الموعد المحدد دون تدخلك، اربط كوكيز الحساب (Cookie Injection)، أو اضغط على الزر أدناه لفتح لوحة النشر في جوجل فوراً!',
-              copyPayload: `${text}\n\n[زر الإجراء المعتمد: ${cta}]`,
-              directUrl: json.directUrl || 'https://business.google.com/locations'
-            });
-            // Reset composer form
-            textarea.value = '';
-            if (charCount) charCount.textContent = '0 / 1500';
-            if (removePhotoBtn) removePhotoBtn.click();
-            if (scheduleToggle) { scheduleToggle.checked = false; datetimeInput?.classList.add('hidden'); }
-            loadScheduledTimeline();
-          } else if (json.actualExecuted) {
-            showToast(json.message || 'تم نشر المنشور بالصور بنجاح! 📸🎉');
-            boostScore(8);
-            textarea.value = '';
-            if (charCount) charCount.textContent = '0 / 1500';
-            if (removePhotoBtn) removePhotoBtn.click();
-            loadScheduledTimeline();
-          }
+          // Successful scheduling or publishing
+          const isImmediate = !isScheduled;
+          const successMsg = json.message || (isImmediate 
+            ? '✅ تم نشر المنشور بالصورة مباشرة في خرائط جوجل! 📸🎉' 
+            : '✅ تمت جدولة المنشور بالصورة في طابورك السحابي بنجاح! 📅');
+          showToast(successMsg);
+          boostScore(8);
+
+          // Reset composer form
+          if (textarea) textarea.value = '';
+          if (charCount) charCount.textContent = '0 / 1500';
+          if (removePhotoBtn) removePhotoBtn.click();
+          if (scheduleToggle) { scheduleToggle.checked = false; datetimeInput?.classList.add('hidden'); }
+
+          // Refresh timeline & full scheduled manager
+          if (window.loadScheduledTimeline) window.loadScheduledTimeline();
+
+          // Auto-switch to Scheduled Posts Manager page so user sees their post immediately
+          setTimeout(() => {
+            const schedTabBtn = document.getElementById('tabBtnScheduled') || document.querySelector('[data-tab="scheduledPostsTab"]');
+            if (schedTabBtn) {
+              schedTabBtn.click();
+              schedTabBtn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 350);
         } catch (err) {
           alert(`⚠️ تعذر النشر: ${err.message}`);
         } finally {
@@ -1314,17 +1317,108 @@ ${postsList}
       };
     }
 
-    // Load Timeline Helper
-    function loadScheduledTimeline() {
+    // Load Timeline Helper (Updates both the composer preview & dedicated Manager tab)
+    window.loadScheduledTimeline = function() {
       fetch('/api/schedule')
         .then(r => r.json())
         .then(d => {
+          const items = d.items || [];
+          // Filter to posts (items with body/hook or post-like type)
+          const posts = items.filter(i => i.body || i.hook || (i.id && i.id.startsWith('post')) || (i.id && i.id.startsWith('custom')));
+
+          const pendingPosts = posts.filter(i => i.status === 'PENDING' || i.status === 'PENDING_SESSION');
+          const publishedPosts = posts.filter(i => i.status === 'PUBLISHED');
+
+          // Update badges & stats
+          const badgeElem = document.getElementById('scheduledBadgeCount');
+          const navCountElem = document.getElementById('navScheduledCount');
+          const statPending = document.getElementById('statPendingCount');
+          const statPub = document.getElementById('statPublishedCount');
+          const statTotal = document.getElementById('statTotalCount');
+
+          if (badgeElem) badgeElem.textContent = pendingPosts.length;
+          if (navCountElem) navCountElem.textContent = pendingPosts.length;
+          if (statPending) statPending.textContent = pendingPosts.length;
+          if (statPub) statPub.textContent = publishedPosts.length;
+          if (statTotal) statTotal.textContent = posts.length;
+
+          // 1. Populate dedicated Full Manager Grid (#fullScheduledPostsGrid)
+          const fullGrid = document.getElementById('fullScheduledPostsGrid');
+          if (fullGrid) {
+            fullGrid.innerHTML = '';
+            if (posts.length === 0) {
+              fullGrid.innerHTML = `
+                <div class="empty-schedule-card">
+                  <div class="empty-schedule-icon">🗓️</div>
+                  <div class="empty-schedule-title">لا توجد منشورات مجدولة حالياً في طابورك</div>
+                  <p class="empty-schedule-desc">ابدأ بجدولة أول منشور بالصورة لملفك التجاري في خرائط جوجل لمضاعفة تفاعل العملاء وتصدر نتائج البحث المحلية.</p>
+                  <button type="button" class="btn btn-primary" id="emptyCreateBtn">✍️ جدولة منشور جديد الآن</button>
+                </div>
+              `;
+              document.getElementById('emptyCreateBtn')?.addEventListener('click', () => {
+                document.querySelector('[data-tab="calendarTab"]')?.click();
+              });
+            } else {
+              posts.forEach((item) => {
+                const isPub = item.status === 'PUBLISHED';
+                const dateStr = item.scheduledDateFormatted || (item.scheduledFor ? new Date(item.scheduledFor).toLocaleDateString('ar-EG', { dateStyle: 'full' }) : 'موعد مجدول');
+                const imgHtml = item.imageUrl ? `
+                  <div class="post-card-media">
+                    <img src="${item.imageUrl}" alt="صورة المنشور" loading="lazy">
+                    <span class="post-media-tag">📸 صورة معتمدة</span>
+                  </div>
+                ` : '';
+
+                const card = document.createElement('div');
+                card.className = `post-manager-card ${isPub ? 'published' : 'pending'}`;
+                card.innerHTML = `
+                  <div class="post-card-top">
+                    <span class="post-type-pill">📌 ${item.type || 'تحديث أسبوعي'}</span>
+                    <span class="post-status-pill ${isPub ? 'status-pub' : 'status-pend'}">
+                      ${isPub ? '🟢 تم النشر في Google' : '⏳ مجدول سحابياً 24/7'}
+                    </span>
+                  </div>
+                  ${imgHtml}
+                  <div class="post-card-body">
+                    <div class="post-card-text">${item.body || item.hook || ''}</div>
+                    <div class="post-card-meta-box">
+                      <div class="post-meta-row">
+                        <span>⏰ ${isPub ? 'تاريخ النشر:' : 'موعد النشر التلقائي:'}</span>
+                        <strong style="color: #93c5fd;">${dateStr}</strong>
+                      </div>
+                      <div class="post-meta-row">
+                        <span>📞 زر الإجراء:</span>
+                        <span class="post-cta-tag">${item.callToAction || 'اتصل الآن'}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="post-card-actions">
+                    ${!isPub ? `
+                      <button type="button" class="btn-post-pub" onclick="window.publishScheduledPostNow('${item.id}')">
+                        🚀 نشر فوري الآن
+                      </button>
+                    ` : `
+                      <button type="button" class="btn-post-pub disabled" disabled>
+                        ✅ تم النشر في خرائط Google
+                      </button>
+                    `}
+                    <button type="button" class="btn-post-del" onclick="window.deleteScheduledPost('${item.id}')">
+                      🗑️ حذف
+                    </button>
+                  </div>
+                `;
+                fullGrid.appendChild(card);
+              });
+            }
+          }
+
+          // 2. Populate Composer Mini Timeline (#scheduledPostsTimeline)
           const timeline = document.getElementById('scheduledPostsTimeline');
-          if (timeline && d.items) {
+          if (timeline) {
             timeline.innerHTML = '';
-            d.items.slice(0, 8).forEach((item, idx) => {
+            posts.slice(0, 6).forEach((item) => {
               const isPub = item.status === 'PUBLISHED';
-              const imgHtml = item.imageUrl ? `<div style="margin-bottom: 8px;"><img src="${item.imageUrl}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;"></div>` : '';
+              const imgHtml = item.imageUrl ? `<div style="margin-bottom: 8px;"><img src="${item.imageUrl}" style="width: 100%; height: 110px; object-fit: cover; border-radius: 8px;"></div>` : '';
               timeline.innerHTML += `
                 <div class="schedule-card ${isPub ? 'published' : 'pending'}">
                   <div class="schedule-card-top">
@@ -1332,9 +1426,9 @@ ${postsList}
                     <span class="schedule-date">${item.scheduledDateFormatted || item.scheduledFor?.slice(0, 10)}</span>
                   </div>
                   ${imgHtml}
-                  <h4 style="font-size: 0.95rem; margin: 6px 0; color: #fff;">${item.type || 'منشور ترويجي'}</h4>
-                  <p style="font-size: 0.84rem; color: #cbd5e1; line-height: 1.5;">${(item.body || item.hook || '').slice(0, 120)}...</p>
-                  <div style="margin-top: 10px; font-size: 0.78rem; color: #93c5fd;">
+                  <h4 style="font-size: 0.92rem; margin: 6px 0; color: #fff;">${item.type || 'منشور ترويجي'}</h4>
+                  <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5;">${(item.body || item.hook || '').slice(0, 100)}...</p>
+                  <div style="margin-top: 8px; font-size: 0.78rem; color: #93c5fd;">
                     زر الإجراء: <strong>${item.callToAction || 'اتصل الآن'}</strong>
                   </div>
                 </div>
@@ -1343,8 +1437,50 @@ ${postsList}
           }
         })
         .catch(() => {});
+    };
+    window.loadScheduledTimeline();
+
+    // Wire up scheduled manager buttons
+    const navViewScheduleBtn = document.getElementById('navViewScheduleBtn');
+    if (navViewScheduleBtn) {
+      navViewScheduleBtn.onclick = () => {
+        const resultsSection = document.getElementById('resultsSection');
+        if (resultsSection && resultsSection.classList.contains('hidden')) {
+          resultsSection.classList.remove('hidden');
+        }
+        const schedBtn = document.getElementById('tabBtnScheduled');
+        if (schedBtn) {
+          schedBtn.click();
+          schedBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        if (window.loadScheduledTimeline) window.loadScheduledTimeline();
+      };
     }
-    loadScheduledTimeline();
+
+    const refreshScheduleBtn = document.getElementById('refreshScheduleBtn');
+    if (refreshScheduleBtn) {
+      refreshScheduleBtn.onclick = () => {
+        showToast('🔄 جاري تحديث قائمة المنشورات المجدولة...');
+        if (window.loadScheduledTimeline) window.loadScheduledTimeline();
+      };
+    }
+
+    const openComposerFromScheduleBtn = document.getElementById('openComposerFromScheduleBtn');
+    if (openComposerFromScheduleBtn) {
+      openComposerFromScheduleBtn.onclick = () => {
+        const calTabBtn = document.querySelector('[data-tab="calendarTab"]');
+        if (calTabBtn) {
+          calTabBtn.click();
+          setTimeout(() => {
+            const textarea = document.getElementById('composerTextarea');
+            if (textarea) {
+              textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              textarea.focus();
+            }
+          }, 200);
+        }
+      };
+    }
   }
 });
 
@@ -1357,6 +1493,67 @@ function showToast(msg) {
     setTimeout(() => toast.classList.remove('show'), 3000);
   }
 }
+
+// Global delete scheduled post handler
+window.deleteScheduledPost = async function(id) {
+  if (!confirm('هل تريد بالتأكيد حذف هذا المنشور من جدول النشر؟')) return;
+  try {
+    const res = await fetch(`/api/schedule?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'تعذر حذف المنشور');
+    showToast('🗑️ تم حذف المنشور من الجدول بنجاح');
+    if (window.loadScheduledTimeline) window.loadScheduledTimeline();
+  } catch (err) {
+    alert(`تعذر الحذف: ${err.message}`);
+  }
+};
+
+// Global publish scheduled post now handler
+window.publishScheduledPostNow = async function(id) {
+  const btn = event?.currentTarget;
+  const origBtnText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '⏳ جاري النشر في Google...';
+  }
+  try {
+    const schedRes = await fetch('/api/schedule');
+    const schedData = await schedRes.json();
+    const targetPost = schedData.items?.find(i => i.id === id);
+    if (!targetPost) throw new Error('لم يتم العثور على بيانات المنشور');
+
+    const res = await fetch('/api/action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'create_post',
+        businessName: targetPost.businessName || window.currentAuditData?.business?.name || 'رسلان للتسويق',
+        data: {
+          postText: targetPost.body || targetPost.hook || '',
+          image: targetPost.imageUrl || null,
+          callToAction: targetPost.callToAction || 'اتصل الآن',
+          type: targetPost.type || 'تحديث فوري',
+          isImmediate: true
+        }
+      })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'تعذر النشر في Google');
+
+    // Remove or update the pending item
+    await fetch(`/api/schedule?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+
+    showToast('🚀 تم نشر المنشور فورياً في خرائط Google بنجاح! 📸🎉');
+    boostScore(8);
+    if (window.loadScheduledTimeline) window.loadScheduledTimeline();
+  } catch (err) {
+    alert(`تعذر النشر الفوري: ${err.message}`);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = origBtnText;
+    }
+  }
+};
 
 // Global publish direct to Google handler
 window.publishDirectlyToGoogle = function(idx) {

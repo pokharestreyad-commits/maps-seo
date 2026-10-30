@@ -1,48 +1,76 @@
 /**
- * Maps SEO Pro - Google Account One-Time Login & Captcha Solver
- * يفتح نافذة متصفح مرئية لتسجيل الدخول لحساب جوجل المالك وحل الكابتشا لمرة واحدة.
- * يتم حفظ الكوكيز وملفات الجلسة في مجلد session_data للاستخدام التلقائي الطويل في الخلفية.
+ * Maps SEO Pro - Google Account One-Time Login & Auto Cookie Extractor
+ * يفتح نافذة متصفح جوجل كروم مرئية لتسجيل الدخول بحساب جوجل المالك لـ "رسلان للتسويق".
+ * يقوم الروبوت تلقائياً باستخراج كوكيز الجلسة وحفظها في cloud_session.json دون الحاجة لنسخ يدوي!
  */
 
 const { openLoginSession, SESSION_DIR } = require('./scheduler/browserPoster');
+const { saveCloudSession } = require('./scheduler/sessionStore');
 const readline = require('readline');
 
 async function main() {
   console.log('================================================================');
-  console.log('🔐 Maps SEO Pro - تسجيل الدخول وحل الكابتشا لمرة واحدة');
+  console.log('🔐 Maps SEO Pro - تسجيل الدخول واستخراج الجلسة التلقائي');
   console.log('================================================================');
-  console.log('📁 مجلد حفظ الجلسة والكوكيز:', SESSION_DIR);
-  console.log('⏳ جاري فتح متصفح جوجل كروم الآن...');
+  console.log('📁 مجلد حفظ بيانات المتصفح:', SESSION_DIR);
+  console.log('⏳ جاري إطلاق متصفح جوجل كروم المرئي الآن...\n');
 
   try {
     const browser = await openLoginSession();
+    const pages = await browser.pages();
+    const page = pages[0] || (await browser.newPage());
 
-    console.log('\n----------------------------------------------------------------');
-    console.log('👉 الخطوات المطلوبة في المتصفح المفتوح أمامك:');
-    console.log('  1. قم بتسجيل الدخول إلى حساب Google الذي يدير نشاطك التجاري.');
-    console.log('  2. إذا ظهرت شاشة الكابتشا (أنا لست برنامج روبوت)، قم بحلها.');
-    console.log('  3. تأكد من ظهور لوحة نشاطك التجاري في خرائط جوجل.');
+    console.log('👉 في نافذة المتصفح المفتوحة الآن:');
+    console.log('  1. قم بتسجيل الدخول إلى حساب Google الذي يدير "رسلان للتسويق".');
+    console.log('  2. تأكد من فتح صفحة Google Business Profile (أو ظهور لوحة النشاط).');
     console.log('----------------------------------------------------------------');
-    console.log('⌨️  بعد الانتهاء، اضغط [ENTER] هنا في هذه الشاشة لحفظ الجلسة وإغلاق المتصفح:');
+    console.log('⏳ الروبوت يراقب الجلسة الآن؛ بمجرد اكتمال تسجيل الدخول، سيتم حفظ الكوكيز تلقائياً...');
 
+    // Function to extract and save cookies
+    let saved = false;
+    async function extractAndSave() {
+      try {
+        const cookies = await page.cookies();
+        const important = cookies.filter(c => c.name.includes('SID') || c.name.includes('SSID') || c.name.includes('APISID'));
+        if (important.length >= 2 && !saved) {
+          saved = true;
+          const result = saveCloudSession(cookies, {
+            accountName: 'حساب جوجل المالك - رسلان للتسويق',
+            extractedAt: new Date().toISOString()
+          });
+          console.log('\n🎉 ============================================================');
+          console.log(`✅ تم استخراج وحفظ ${result.cookiesCount} كوكيز سحابية بنجاح تام!`);
+          console.log('🚀 تم تفعيل الجلسة السحابية في cloud_session.json تلقائياً!');
+          console.log('============================================================\n');
+        }
+      } catch (err) {}
+    }
+
+    // Monitor every 4 seconds for active session
+    const interval = setInterval(async () => {
+      try {
+        await extractAndSave();
+      } catch {}
+    }, 4000);
+
+    // Keep open until user closes or presses Enter
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
     });
 
-    rl.question('', async () => {
+    rl.question('\n⌨️  اضغط [ENTER] عند الانتهاء لحفظ الجلسة وإغلاق المتصفح: ', async () => {
+      clearInterval(interval);
       rl.close();
-      try {
-        await browser.close();
-      } catch {}
-      console.log('\n✅ تم حفظ الجلسة بنجاح تام! 🎉');
-      console.log('🚀 الآن يمكن للنظام النشر التلقائي في الخلفية بدون كابتشا لفترات طويلة.');
-      console.log('💡 لتجربة نشر المنشور المجدول فوراً في الخلفية، شغّل: npm run post-now\n');
+      await extractAndSave();
+      try { await browser.close(); } catch {}
+      console.log('✅ تم إغلاق المتصفح وحفظ الجلسة بنجاح.');
       process.exit(0);
     });
 
-    browser.on('disconnected', () => {
-      console.log('\n✅ تم إغلاق المتصفح وحفظ الجلسة في session_data بنجاح!');
+    browser.on('disconnected', async () => {
+      clearInterval(interval);
+      console.log('\n✅ تم إغلاق نافذة المتصفح، واكتمل حفظ الجلسة بنجاح!');
       process.exit(0);
     });
 

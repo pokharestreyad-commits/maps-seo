@@ -27,6 +27,7 @@
         </div>
       </div>
       <div class="nav-badges">
+        <button type="button" id="navViewScheduleBtn" class="pill-badge pill-blue nav-schedule-btn">📋 المنشورات المجدولة (<span id="navScheduledCount">0</span>)</button>
         <button type="button" id="navSessionBtn" class="pill-badge pill-purple nav-session-btn">🔐 ربط حساب Google السحابي</button>
         <span class="pill-badge pill-blue">🗺️ Google 3-Pack Ready</span>
       </div>
@@ -252,7 +253,8 @@
           <button class="tab-btn active" data-tab="pillarsTab">📊 ركائز السيو والمشاكل</button>
           <button class="tab-btn" data-tab="competitorsTab">⚔️ مقارنة المنافسين والهجوم</button>
           <button class="tab-btn" data-tab="aiTab">🤖 الذكاء الاصطناعي والحلول الجاهزة</button>
-          <button class="tab-btn" data-tab="calendarTab">📅 تقويم وجدولة المنشورات</button>
+          <button class="tab-btn" data-tab="calendarTab">✍️ استوديو إنشاء البوستات</button>
+          <button class="tab-btn tab-btn-highlight" data-tab="scheduledPostsTab" id="tabBtnScheduled">📋 المنشورات المجدولة (<span id="scheduledBadgeCount">0</span>)</button>
           <button class="tab-btn" data-tab="fixCenterTab">⚡ مركز تطبيق الإصلاحات (Fix Center)</button>
         </div>
 
@@ -370,7 +372,7 @@
                 <!-- Left: Media Upload Zone -->
                 <div class="composer-media-zone">
                   <div class="media-dropzone" id="mediaDropzone">
-                    <input type="file" id="composerFileInput" accept="image/*" class="hidden-file-input" title="رفع ملفات الوسائط والصور" aria-label="رفع ملفات الوسائط والصور">
+                    <input type="file" id="composerFileInput" accept="image/*" class="hidden-file-input" title="رفع صورة المشاركة" aria-label="رفع صورة المشاركة">
                     <div id="dropzonePrompt" class="dropzone-inner">
                       <div class="drop-icon">📸</div>
                       <div class="drop-title">سحب صور وفيديوهات إلى هذه المنطقة</div>
@@ -419,9 +421,9 @@
                           <input type="checkbox" id="scheduleToggle" title="جدولة هذه المشاركة" aria-label="جدولة هذه المشاركة">
                           <span class="switch-slider"></span>
                         </label>
-                        <span id="scheduleToggleLabel" class="schedule-toggle-text">جدولة هذه المشاركة</span>
+                        <span id="scheduleToggleLabel" class="toggle-label">جدولة هذه المشاركة</span>
                       </div>
-                      <input type="datetime-local" id="composerDatetimeInput" class="composer-date-input hidden" title="موعد وتاريخ النشر" aria-label="موعد وتاريخ النشر" placeholder="اختر تاريخ النشر">
+                      <input type="datetime-local" id="composerDatetimeInput" class="composer-date-input hidden" title="موعد النشر المجدول" placeholder="اختر تاريخ ووقت النشر" aria-label="موعد النشر المجدول">
                     </div>
                   </div>
 
@@ -520,7 +522,47 @@
           </div>
         </div>
 
-        <!-- Tab 5: 1-Click Fix Center -->
+        <!-- Tab 5: Dedicated Scheduled Posts Manager (صفحة المنشورات المجدولة) -->
+        <div id="scheduledPostsTab" class="tab-content">
+          <div class="scheduled-manager-card">
+            <div class="scheduled-manager-header">
+              <div class="manager-title-wrap">
+                <div class="manager-icon">📋</div>
+                <div>
+                  <h3 class="tab-heading">صفحة وإدارة المنشورات المجدولة (Scheduled Posts Manager)</h3>
+                  <p class="tab-subdesc">استعرض جميع المنشورات والعروض المجدولة والمنشورة في ملف خرائط جوجل لـ "رسلان للتسويق"، مع إمكانية النشر الفوري أو الحذف بنقرة واحدة.</p>
+                </div>
+              </div>
+              <div class="manager-actions-bar">
+                <button type="button" class="btn btn-secondary" id="refreshScheduleBtn">🔄 تحديث القائمة</button>
+                <button type="button" class="btn btn-primary" id="openComposerFromScheduleBtn">✍️ جدولة منشور جديد</button>
+              </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="schedule-stats-row">
+              <div class="schedule-stat-pill">
+                <span class="stat-dot pending-dot"></span>
+                <span>بانتظار موعد النشر التلقائي: <strong id="statPendingCount">0</strong></span>
+              </div>
+              <div class="schedule-stat-pill">
+                <span class="stat-dot pub-dot"></span>
+                <span>تم نشرها بنجاح: <strong id="statPublishedCount">0</strong></span>
+              </div>
+              <div class="schedule-stat-pill">
+                <span class="stat-dot total-dot"></span>
+                <span>إجمالي المنشورات: <strong id="statTotalCount">0</strong></span>
+              </div>
+            </div>
+
+            <!-- Posts List Container -->
+            <div id="fullScheduledPostsGrid" class="full-schedule-grid">
+              <!-- Dynamically populated via loadScheduledTimeline -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 6: 1-Click Fix Center -->
         <div id="fixCenterTab" class="tab-content">
           <div class="fix-center-wrapper">
             <div class="fix-header-card">

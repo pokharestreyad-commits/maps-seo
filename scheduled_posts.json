@@ -1,5 +1,181 @@
 [
   {
+    "id": "act_reply_1793379389111",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_REPLY_REVIEWS",
+    "payload": {
+      "count": 5
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T16:56:29.111Z",
+    "details": "تم إرسال 5 ردود ذكية معتمدة عبر الجلسة السحابية."
+  },
+  {
+    "id": "act_desc_1793379389107",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_UPDATE_DESCRIPTION",
+    "payload": {
+      "description": "رسلان للتسويق وكالة تسويق رقمي رائدة في الشيخ زايد ومحافظة القاهرة، متخصصة في مضاعفة مبيعات الشركات ورواد الأعمال وإدارة الحملات الإعلانية الممولة وتحسين محركات البحث SEO."
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T16:56:29.107Z",
+    "details": "تم تنفيذ وتأكيد تحديث وصف النشاط بنجاح عبر الجلسة السحابية المعتمدة."
+  },
+  {
+    "id": "act_reply_1793378186272",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_REPLY_REVIEWS",
+    "payload": {
+      "count": 5
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T16:36:26.272Z",
+    "details": "تم إرسال 5 ردود ذكية معتمدة عبر الجلسة السحابية."
+  },
+  {
+    "id": "act_desc_1793378186268",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_UPDATE_DESCRIPTION",
+    "payload": {
+      "description": "رسلان للتسويق وكالة تسويق رقمي رائدة في الشيخ زايد ومحافظة القاهرة، متخصصة في مضاعفة مبيعات الشركات ورواد الأعمال وإدارة الحملات الإعلانية الممولة وتحسين محركات البحث SEO."
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T16:36:26.268Z",
+    "details": "تم تنفيذ وتأكيد تحديث وصف النشاط بنجاح عبر الجلسة السحابية المعتمدة."
+  },
+  {
+    "id": "act_desc_1793378046657",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_UPDATE_DESCRIPTION",
+    "payload": {
+      "description": "رسلان للتسويق وكالة تسويق رقمي رائدة في الشيخ زايد ومحافظة القاهرة..."
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T16:34:06.657Z",
+    "details": "تم تنفيذ وتأكيد تحديث وصف النشاط بنجاح عبر الجلسة السحابية المعتمدة."
+  },
+  {
+    "id": "post_1793378046626",
+    "businessName": "رسلان للتسويق",
+    "type": "تحديث",
+    "body": "عرض خاص ومميز من رسلان للتسويق! اتصل بنا الآن.",
+    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    "callToAction": "اتصل الآن",
+    "scheduledFor": "2026-10-30T16:34:06.626Z",
+    "scheduledDateFormatted": "الجمعة، ٣٠ أكتوبر ٢٠٢٦",
+    "status": "PENDING",
+    "isImmediate": false,
+    "createdAt": "2026-10-30T16:34:06.647Z",
+    "requiresSession": false
+  },
+  {
+    "id": "act_reply_1793378046623",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_REPLY_REVIEWS",
+    "payload": {
+      "count": 5
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T16:34:06.623Z",
+    "details": "تم إرسال 5 ردود ذكية معتمدة عبر الجلسة السحابية."
+  },
+  {
+    "id": "act_desc_1793378046619",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_UPDATE_DESCRIPTION",
+    "payload": {
+      "description": "رسلان للتسويق وكالة تسويق رقمي رائدة في الشيخ زايد ومحافظة القاهرة..."
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T16:34:06.619Z",
+    "details": "تم تنفيذ وتأكيد تحديث وصف النشاط بنجاح عبر الجلسة السحابية المعتمدة."
+  },
+  {
+    "id": "act_desc_1793377333768",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_UPDATE_DESCRIPTION",
+    "payload": {
+      "description": "رسلان للتسويق وكالة تسويق رقمي رائدة في الشيخ زايد ومحافظة القاهرة..."
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T16:22:13.769Z",
+    "details": "تم تنفيذ وتأكيد تحديث وصف النشاط بنجاح عبر الجلسة السحابية المعتمدة."
+  },
+  {
+    "id": "post_1793377333735",
+    "businessName": "رسلان للتسويق",
+    "type": "تحديث",
+    "body": "عرض خاص ومميز من رسلان للتسويق! اتصل بنا الآن.",
+    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    "callToAction": "اتصل الآن",
+    "scheduledFor": "2026-10-30T16:22:13.735Z",
+    "scheduledDateFormatted": "الجمعة، ٣٠ أكتوبر ٢٠٢٦",
+    "status": "PENDING_SESSION",
+    "isImmediate": false,
+    "createdAt": "2026-10-30T16:22:13.760Z",
+    "requiresSession": true
+  },
+  {
+    "id": "act_desc_1793375480222",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_UPDATE_DESCRIPTION",
+    "payload": {
+      "description": "رسلان للتسويق وكالة تسويق رقمي رائدة في الشيخ زايد ومحافظة القاهرة..."
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T15:51:20.222Z",
+    "details": "تم تنفيذ وتأكيد تحديث وصف النشاط بنجاح عبر الجلسة السحابية المعتمدة."
+  },
+  {
+    "id": "post_1793375480188",
+    "businessName": "رسلان للتسويق",
+    "type": "تحديث",
+    "body": "عرض خاص ومميز من رسلان للتسويق! اتصل بنا الآن.",
+    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    "callToAction": "اتصل الآن",
+    "scheduledFor": "2026-10-30T15:51:20.188Z",
+    "scheduledDateFormatted": "الجمعة، ٣٠ أكتوبر ٢٠٢٦",
+    "status": "PENDING_SESSION",
+    "isImmediate": false,
+    "createdAt": "2026-10-30T15:51:20.215Z",
+    "requiresSession": true
+  },
+  {
+    "id": "act_desc_1793375295793",
+    "businessName": "رسلان للتسويق",
+    "type": "ACTION_UPDATE_DESCRIPTION",
+    "payload": {
+      "description": "رسلان للتسويق وكالة تسويق رقمي رائدة في الشيخ زايد ومحافظة القاهرة..."
+    },
+    "status": "PUBLISHED",
+    "executedVia": "CLOUD_SESSION_AUTOMATION",
+    "executedAt": "2026-10-30T15:48:15.793Z",
+    "details": "تم تنفيذ وتأكيد تحديث وصف النشاط بنجاح عبر الجلسة السحابية المعتمدة."
+  },
+  {
+    "id": "post_1793375295761",
+    "businessName": "رسلان للتسويق",
+    "type": "تحديث",
+    "body": "عرض خاص ومميز من رسلان للتسويق! اتصل بنا الآن.",
+    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    "callToAction": "اتصل الآن",
+    "scheduledFor": "2026-10-30T15:48:15.761Z",
+    "scheduledDateFormatted": "الجمعة، ٣٠ أكتوبر ٢٠٢٦",
+    "status": "PENDING_SESSION",
+    "isImmediate": false,
+    "createdAt": "2026-10-30T15:48:15.785Z",
+    "requiresSession": true
+  },
+  {
     "id": "act_desc_1793374026177",
     "businessName": "رسلان للتسويق",
     "type": "ACTION_UPDATE_DESCRIPTION",
@@ -47,7 +223,9 @@
     "callToAction": "معرفة المزيد",
     "scheduledFor": "2026-11-13T12:59:47.179Z",
     "scheduledDateFormatted": "الجمعة، ١٣ نوفمبر ٢٠٢٦",
-    "status": "PENDING",
-    "createdAt": "2026-10-30T12:59:47.201Z"
+    "status": "PUBLISHED",
+    "createdAt": "2026-10-30T12:59:47.201Z",
+    "publishedAt": "2026-10-30T15:46:56.895Z",
+    "screenshot": "D:\\maps seo\\screenshots\\post-run-1793375216635.png"
   }
 ]
