@@ -107,10 +107,29 @@ async function publishPost(postData = {}) {
   try {
     const page = await browser.newPage();
 
+const { getCloudSession } = require('./sessionStore');
+
     // Prevent detection as automated bot
     await page.evaluateOnNewDocument(() => {
       Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
     });
+
+    // 0. Inject Cloud Cookies if available
+    const cloudSess = getCloudSession();
+    const cookiesToInject = postData.cookies || cloudSess?.cookies;
+    if (cookiesToInject && Array.isArray(cookiesToInject) && cookiesToInject.length > 0) {
+      console.log(`[BrowserPoster] 🍪 جاري حقن ${cookiesToInject.length} كوكيز سحابية للجلسة...`);
+      for (const c of cookiesToInject) {
+        try {
+          await page.setCookie({
+            name: c.name,
+            value: c.value,
+            domain: c.domain || '.google.com',
+            path: c.path || '/'
+          });
+        } catch {}
+      }
+    }
 
     // 1. Navigate to Google Search or Google Business Profile
     const searchUrl = businessName

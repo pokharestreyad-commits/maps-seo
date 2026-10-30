@@ -581,6 +581,103 @@ ${postsList}
       };
     }
   }
+
+  // 6. Cloud Session Controller (Cookie Injection)
+  initCloudSession();
+
+  function initCloudSession() {
+    const badge = document.getElementById('cloudSessionStatusBadge');
+    const text = document.getElementById('cloudSessionStatusText');
+    const cookieInput = document.getElementById('cookieInput');
+    const saveBtn = document.getElementById('saveSessionBtn');
+    const clearBtn = document.getElementById('clearSessionBtn');
+    const testBtn = document.getElementById('testCloudPostBtn');
+
+    // Fetch initial status
+    fetch('/api/session')
+      .then(r => r.json())
+      .then(d => {
+        if (d && d.active) {
+          badge?.classList.remove('disconnected');
+          badge?.classList.add('connected');
+          if (text) text.textContent = `🟢 الجلسة السحابية مفعلة (${d.details?.cookiesCount || 0} كوكيز)`;
+        } else {
+          badge?.classList.remove('connected');
+          badge?.classList.add('disconnected');
+          if (text) text.textContent = '⚪ الجلسة السحابية غير متصلة';
+        }
+      })
+      .catch(() => {});
+
+    // Save Cookies Button
+    if (saveBtn) {
+      saveBtn.onclick = async () => {
+        const val = cookieInput?.value?.trim();
+        if (!val) {
+          alert('يرجى لصق الكوكيز أولاً في المربع.');
+          return;
+        }
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'جاري التفعيل... ⏳';
+
+        try {
+          const res = await fetch('/api/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cookies: val })
+          });
+          const json = await res.json();
+          if (!res.ok) throw new Error(json.error || 'تعذر حفظ الكوكيز');
+
+          showToast(json.message || 'تم تفعيل الجلسة السحابية بنجاح! 🚀');
+          badge?.classList.remove('disconnected');
+          badge?.classList.add('connected');
+          if (text) text.textContent = `🟢 الجلسة السحابية مفعلة (${json.details?.cookiesCount || 0} كوكيز)`;
+          if (cookieInput) cookieInput.value = '';
+        } catch (err) {
+          alert(`⚠️ خطأ: ${err.message}`);
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'حفظ وتفعيل الجلسة السحابية ☁️';
+        }
+      };
+    }
+
+    // Clear Session Button
+    if (clearBtn) {
+      clearBtn.onclick = async () => {
+        if (!confirm('هل أنت متأكد من رغبتك في مسح الجلسة السحابية؟')) return;
+        try {
+          await fetch('/api/session', { method: 'DELETE' });
+          badge?.classList.remove('connected');
+          badge?.classList.add('disconnected');
+          if (text) text.textContent = '⚪ الجلسة السحابية غير متصلة';
+          showToast('تم مسح الجلسة السحابية.');
+        } catch (e) {
+          alert('تعذر مسح الجلسة.');
+        }
+      };
+    }
+
+    // Test Cloud Post Button
+    if (testBtn) {
+      testBtn.onclick = async () => {
+        testBtn.disabled = true;
+        testBtn.textContent = 'جاري محاكاة النشر السحابي... ⏳';
+        try {
+          const res = await fetch('/api/cron-publish', { method: 'POST' });
+          const json = await res.json();
+          if (!res.ok) throw new Error(json.error || 'حدث خطأ');
+          showToast(`⚡ ${json.message || 'تم النشر بنجاح'}`);
+        } catch (err) {
+          showToast(`⚠️ تنبيه: ${err.message}`);
+        } finally {
+          testBtn.disabled = false;
+          testBtn.textContent = 'تجربة استدعاء النشر السحابي ⚡';
+        }
+      };
+    }
+  }
 });
 
 // Toast notification helper

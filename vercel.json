@@ -15,5 +15,11 @@
     "api/*.js": {
       "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron-publish",
+      "schedule": "0 10 * * 0,2,4"
+    }
+  ]
 }

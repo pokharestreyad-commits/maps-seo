@@ -247,6 +247,53 @@
             <!-- Schedule Timeline Grid -->
             <div id="scheduledPostsTimeline" class="schedule-timeline-grid"></div>
 
+            <!-- Cloud Session & Cookie Injection Card -->
+            <div class="cloud-session-card">
+              <div class="cloud-session-header">
+                <div class="cloud-session-title-wrap">
+                  <div class="cloud-session-icon">🔐</div>
+                  <div>
+                    <h4 style="font-size: 1.1rem; font-weight: 800;">ربط حساب جوجل السحابي (Cloud Cookie Injection)</h4>
+                    <p style="font-size: 0.84rem; color: var(--text-muted);">لتشغيل الأتمتة السحابية 100% والنشر في المواعيد المحددة دون فتح جهازك ودون كابتشا</p>
+                  </div>
+                </div>
+                <div class="cloud-status-badge" id="cloudSessionStatusBadge">
+                  <span class="status-dot"></span>
+                  <span id="cloudSessionStatusText">جاري فحص الجلسة...</span>
+                </div>
+              </div>
+
+              <div class="cloud-session-body">
+                <div class="cookie-input-box">
+                  <label for="cookieInput" style="font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; display: block;">
+                    🍪 الصق كوكيز جلسة جوجل هنا (تنسيق JSON أو نص الكوكيز):
+                  </label>
+                  <textarea id="cookieInput" class="cookie-textarea" rows="3" placeholder='الصق الكوكيز هنا من إضافة Cookie-Editor أو بصيغة JSON: [{"name": "SID", "value": "..."}, ...]'></textarea>
+                </div>
+
+                <div class="cloud-session-actions">
+                  <button class="btn btn-primary" id="saveSessionBtn">حفظ وتفعيل الجلسة السحابية ☁️</button>
+                  <button class="btn btn-secondary" id="testCloudPostBtn">تجربة استدعاء النشر السحابي ⚡</button>
+                  <button class="btn btn-ghost" id="clearSessionBtn" style="color: var(--danger);">مسح الجلسة 🗑️</button>
+                </div>
+
+                <div class="cookie-guide-accordion">
+                  <details>
+                    <summary>📖 كيف تنسخ كوكيز حسابك في 30 ثانية؟ (شرح الخطوات البسيطة)</summary>
+                    <div class="guide-steps">
+                      <ol>
+                        <li>ثبّت إضافة المتصفح المجانية <strong><a href="https://cookie-editor.cggn.dev/" target="_blank" style="color: #60a5fa; text-decoration: underline;">Cookie-Editor</a></strong> (متوفرة لكروم وإيدج).</li>
+                        <li>افتح تبويب بطاقة نشاطك على <a href="https://business.google.com" target="_blank" style="color: #60a5fa; text-decoration: underline;">Google Business Profile</a> وأنت مسجل دخولك.</li>
+                        <li>اضغط على أيقونة الإضافة، ثم اضغط <strong>Export ➔ Export as JSON</strong>.</li>
+                        <li>الصق النص المنسوخ في المربع أعلاه واضغط <strong>"حفظ وتفعيل الجلسة السحابية"</strong>.</li>
+                      </ol>
+                      <p class="guide-note">💡 يتم حفظ الكوكيز في خوادمك السحابية لاستخدامها فقط في نشر البوستات المجدولة في مواعيدها التلقائية دون أن تطالبك جوجل بكابتشا.</p>
+                    </div>
+                  </details>
+                </div>
+              </div>
+            </div>
+
             <!-- Cloud Automation / Browserless Info Box -->
             <div class="automation-card">
               <div class="automation-header">

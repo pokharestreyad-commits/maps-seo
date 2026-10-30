@@ -978,6 +978,156 @@ body {
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
 }
 
+/* Cloud Session Card (Cookie Injection) */
+.cloud-session-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+}
+
+.cloud-session-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+}
+
+.cloud-session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.cloud-session-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cloud-session-icon {
+  width: 46px;
+  height: 46px;
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.cloud-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+}
+
+.cloud-status-badge.connected {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.cloud-status-badge.connected .status-dot {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.cloud-status-badge.disconnected {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #f87171;
+}
+
+.cloud-status-badge.disconnected .status-dot {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+.cookie-textarea {
+  width: 100%;
+  background: rgba(10, 15, 26, 0.8);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  color: var(--text-main);
+  font-family: monospace;
+  font-size: 0.82rem;
+  resize: vertical;
+  margin-bottom: 14px;
+  direction: ltr;
+  text-align: left;
+}
+
+.cookie-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.cloud-session-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.cookie-guide-accordion details {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.cookie-guide-accordion summary {
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #93c5fd;
+  user-select: none;
+}
+
+.cookie-guide-accordion summary:hover {
+  color: #bfdbfe;
+}
+
+.guide-steps {
+  margin-top: 12px;
+  font-size: 0.84rem;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.guide-steps ol {
+  padding-right: 20px;
+  margin-bottom: 10px;
+}
+
+.guide-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
 /* Automation Card */
 .automation-card {
   background: rgba(15, 23, 42, 0.7);
