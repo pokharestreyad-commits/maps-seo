@@ -1,0 +1,23 @@
+{
+  "name": "maps-seo-core-engine",
+  "version": "1.0.0",
+  "description": "Local SEO Audit & Optimization Core Engine for Google Maps and Google Business Profiles",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dev-server.js",
+    "dev": "node dev-server.js",
+    "test": "node test-run.js"
+  },
+  "keywords": [
+    "local-seo",
+    "google-maps",
+    "google-business-profile",
+    "seo-audit",
+    "rank-tracker"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer-core": "^25.16.0"
+  }
+}

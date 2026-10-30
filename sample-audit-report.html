@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تقرير فحص السيو المحلي | عيادة د. حسام لطب الأسنان</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(22, 29, 45, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.25);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --accent: #8b5cf6;
+      --score-color: #F97316;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+      color: var(--text);
+      font-family: 'Cairo', sans-serif;
+      line-height: 1.6;
+      padding: 30px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Top Bar & Actions */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+
+    .logo-text h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .actions-area {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border-color: #3b82f6;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    /* Hero Business Card */
+    .hero-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 30px;
+      align-items: center;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--score-color), var(--accent));
+    }
+
+    .biz-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .biz-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .biz-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .biz-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Score Gauge */
+    .score-box {
+      text-align: center;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      padding: 20px 30px;
+      border-radius: 18px;
+      min-width: 180px;
+    }
+
+    .score-circle {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--score-color);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .score-max {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .grade-badge {
+      display: inline-block;
+      margin-top: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--score-color);
+      border: 1px solid var(--score-color);
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    /* Metrics Summary Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .metric-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .metric-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Section Styling */
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title span {
+      background: var(--card-border);
+      height: 1px;
+      flex-grow: 1;
+    }
+
+    /* Competitor Gap Card */
+    .comp-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 20px;
+      padding: 26px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+
+    .leaderboard-table th, .leaderboard-table td {
+      padding: 12px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .leaderboard-table th {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .leaderboard-table tr.active-row {
+      background: rgba(59, 130, 246, 0.12);
+      font-weight: 800;
+    }
+
+    .strategy-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-right: 4px solid var(--primary);
+      padding: 18px;
+      border-radius: 0 12px 12px 0;
+      margin-top: 15px;
+      font-size: 0.95rem;
+    }
+
+    /* Audit Breakdown Cards */
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .pillar-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .pillar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .pillar-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .pillar-score {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .issue-item {
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    /* AI Generated Action Templates */
+    .ai-card {
+      background: linear-gradient(135deg, rgba(22, 29, 45, 0.8), rgba(30, 27, 75, 0.5));
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 25px;
+    }
+
+    .template-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 12px;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary);
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--success);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 700;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 9999;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Print / PDF Styles */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #0f172a !important;
+        padding: 0;
+      }
+      .actions-area, .copy-btn, #toast {
+        display: none !important;
+      }
+      .hero-card, .metric-card, .comp-card, .pillar-card, .ai-card, .score-box {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+      .biz-title, .metric-val, .pillar-name {
+        color: #0f172a !important;
+      }
+      .badge, .biz-meta, .metric-label {
+        color: #475569 !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .biz-badges, .biz-meta {
+        justify-content: center;
+      }
+      .score-box {
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="logo-area">
+        <div class="logo-icon">📍</div>
+        <div class="logo-text">
+          <h2>Maps SEO Intelligence</h2>
+          <span>نظام فحص وتدقيق خرائط جوجل المتقدم v1.0</span>
+        </div>
+      </div>
+      <div class="actions-area">
+        <button class="btn btn-primary" onclick="window.print()">
+          <span>🖨️</span> طباعة / حفظ كـ PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Hero Card -->
+    <div class="hero-card">
+      <div>
+        <h1 class="biz-title">عيادة د. حسام لطب الأسنان</h1>
+        <div class="biz-badges">
+          <span class="badge">🏷️ طبيب أسنان</span>
+          <span class="badge">📍 شارع النصر، المعادي، القاهرة</span>
+          <span class="badge">📞 +201011223344</span>
+        </div>
+        <div class="biz-meta">
+          <span>📅 تاريخ الفحص: ٣٠ أكتوبر ٢٠٢٦</span>
+          <span>🛡️ حالة الحساب: ضعيف - ظهورك نادر وخوارزمية جوجل تتجاهل ملفك</span>
+        </div>
+      </div>
+
+      <div class="score-box">
+        <div class="score-circle">51</div>
+        <div class="score-max">من 100</div>
+        <div class="grade-badge">الدرجة: C</div>
+      </div>
+    </div>
+
+    <!-- Metrics Summary -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">⭐</div>
+        <div>
+          <div class="metric-val">4.1 / 5</div>
+          <div class="metric-label">متوسط تقييم النجوم</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">💬</div>
+        <div>
+          <div class="metric-val">38</div>
+          <div class="metric-label">إجمالي التقييمات</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">🚀</div>
+        <div>
+          <div class="metric-val">+17</div>
+          <div class="metric-label">نقاط فورية مستهدفة</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">🚨</div>
+        <div>
+          <div class="metric-val">4</div>
+          <div class="metric-label">مشاكل حرجة بحاجة لإصلاح</div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="comp-card">
+      <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        ⚔️ تحليل الفجوة مع المنافسين المحليين
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">
+        تمت مقارنة نشاطك مع المتصدرين في منطقتك لتحديد الثغرات التي تكلفك خسارة الترتيب والمكالمات.
+      </p>
+
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>الترتيب التقديري</th>
+            <th>النشاط التجاري</th>
+            <th>السكور الإجمالي</th>
+            <th>الحالة</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+            <tr class="active-row">
+              <td>#1</td>
+              <td>عيادة د. حسام لطب الأسنان 👈 (نشاطك)</td>
+              <td style="font-family: Outfit; font-weight: 700;">51/100</td>
+              <td><span style="color: var(--primary);">قيد الفحص</span></td>
+            </tr>
+          
+            <tr class="">
+              <td>#2</td>
+              <td>مركز النخبة التخصصي لطب وزراعة الأسنان </td>
+              <td style="font-family: Outfit; font-weight: 700;">50/100</td>
+              <td>منافس</td>
+            </tr>
+          
+        </tbody>
+      </table>
+
+      
+        <div style="margin-top: 15px; margin-bottom: 15px;">
+          <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 8px;">🎯 تصنيفات فرعية يمتلكها المتصدرون وأنت محروم منها:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            
+              <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.3);">
+                + مركز زراعة أسنان
+              </span>
+            
+              <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.3);">
+                + عيادة تجميل وتبييض أسنان
+              </span>
+            
+              <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.3);">
+                + تقويم أسنان
+              </span>
+            
+          </div>
+        </div>
+      
+
+      
+        <div class="strategy-box">
+          <div style="font-weight: 800; color: #60a5fa; margin-bottom: 6px;">🧠 الرؤية التنفيذية واستراتيجية الهجوم:</div>
+          <p style="margin-bottom: 10px; line-height: 1.6;">تظهر البيانات أن عيادة د. حسام لطب الأسنان تحتل المرتبة الأولى من بين نشاطين فقط على خرائط جوجل، لكن الفارق واضح: 252 تقييم أقل من المنافس الرئيسي، وسجل تقييم 4.1 نجوم مقابل 4.8 للمركز النخبة، بالإضافة إلى نقص 57 صورة وغياب ثلاث فئات أساسية (مركز زراعة أسنان، عيادة تجميل وتبييض أسنان، تقويم أسنان). هذا الفجوة تعني خسارة محتملة لعملاء يبحثون عن خدمات متخصصة ويختارون المنافس بسبب الثقة الرقمية الأعلى، ما يترجم إلى انخفاض في عدد المواعيد والإيرادات الشهرية.</p>
+          <div style="font-weight: 700; color: #a78bfa; margin-bottom: 4px;">خطة الهجوم خلال 90 يوماً:</div>
+          <p style="white-space: pre-line; line-height: 1.6;">1. تعزيز ملف Google Business خلال 30 يوماً: إضافة 60+ صورة عالية الجودة (قبل/بعد، فريق، عيادة)، وتحديث الوصف مع الكلمات المفتاحية المحلية. 2. حملة جمع تقييمات سريعة: طلب تقييم فوري من كل مريض بعد العلاج عبر رسائل نصية وروابط مختصرة، هدف الحصول على 250 تقييم إيجابي خلال 60 يوماً مع ردود احترافية على كل تعليق. 3. إضافة الفئات المفقودة: تسجيل الفئات &quot;مركز زراعة أسنان&quot;، &quot;عيادة تجميل وتبييض أسنان&quot; و&quot;تقويم أسنان&quot; في حساب GMB وتحديث الخدمات. 4. بناء إشارات محلية: تسجيل العيادة في 30 دليل محلي موثوق، وتحديث NAP (الاسم، العنوان، الهاتف) بدقة. 5. تحسين الموقع الإلكتروني: تحسين الصفحات الخاصة بالزراعة، التجميل، والتقويم لتشمل Schema المحلي، وزيادة سرعة التحميل. 6. إعلانات Google Local (Local Services Ads) مستهدفة للمنطقة الجغرافية خلال 90 يوماً لزيادة الظهور الفوري وجذب مواعيد جديدة. 7. مراقبة أسبوعية للترتيب وتعديل الاستراتيجية بناءً على تقارير الأداء.</p>
+        </div>
+      
+    </div>
+  
+
+    <!-- Audit Pillars Breakdown -->
+    <h3 class="section-title">📊 تحليل ركائز السيو المحلي الخمس <span></span></h3>
+    <div class="breakdown-grid">
+      
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-name">اكتمال بيانات النشاط (NAP &amp; Core Info)</div>
+        <div class="pillar-score" style="color: var(--warning)">14.5/20 (73%)</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 73%; background: var(--warning)"></div>
+      </div>
+    </div>
+  
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-name">هندسة التصنيفات واسم النشاط (Categories &amp; Name)</div>
+        <div class="pillar-score" style="color: var(--success)">17/20 (85%)</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 85%; background: var(--success)"></div>
+      </div>
+    </div>
+  
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-name">ذكاء التقييمات والتفاعل (Reviews Intelligence)</div>
+        <div class="pillar-score" style="color: var(--warning)">14/25 (56%)</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 56%; background: var(--warning)"></div>
+      </div>
+    </div>
+  
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-name">الوسائط والهوية البصرية (Media &amp; Visuals)</div>
+        <div class="pillar-score" style="color: var(--danger)">5/15 (33%)</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 33%; background: var(--danger)"></div>
+      </div>
+    </div>
+  
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-name">التفاعل والمميزات (Engagement &amp; Attributes)</div>
+        <div class="pillar-score" style="color: var(--danger)">0/20 (0%)</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 0%; background: var(--danger)"></div>
+      </div>
+    </div>
+  
+    </div>
+
+    <!-- Quick Wins & Priority Roadmap -->
+    <h3 class="section-title">⚡ خطة العمل والمكاسب السريعة <span></span></h3>
+    <div class="breakdown-grid">
+      
+    <div class="pillar-card" style="border-right: 4px solid var(--success);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-weight: 800; font-size: 0.95rem;">⚡ عدم استخدام منشورات وتحديثات جوجل (Google Posts)</span>
+        <span class="badge" style="color: var(--success); font-family: Outfit; font-weight: 700;">+8 نقاط</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">خاصية Google Posts مجانية وتمنحك مساحة إعلانية مجانية في صفحة البحث. انشر عرضك الترويجي القادم فوراً.</p>
+      <div style="font-size: 0.75rem; color: #94a3b8;">الوقت التقديري للإنجاز: <strong>5 دقائق</strong></div>
+    </div>
+  
+    <div class="pillar-card" style="border-right: 4px solid var(--success);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-weight: 800; font-size: 0.95rem;">⚡ قسم الأسئلة والأجوبة فارغ تماماً</span>
+        <span class="badge" style="color: var(--success); font-family: Outfit; font-weight: 700;">+5 نقاط</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">اطرح بنفسك 3 إلى 5 أسئلة متكررة (مثل الأسعار، المواعيد، طريقة الحجز) وأجب عليها لتوفير إجابات سريعة للزبائن.</p>
+      <div style="font-size: 0.75rem; color: #94a3b8;">الوقت التقديري للإنجاز: <strong>5 دقائق</strong></div>
+    </div>
+  
+    <div class="pillar-card" style="border-right: 4px solid var(--success);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-weight: 800; font-size: 0.95rem;">⚡ صورة الشعار أو الغلاف مفقودة</span>
+        <span class="badge" style="color: var(--success); font-family: Outfit; font-weight: 700;">+2.5 نقاط</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">أنت تفتقد إما الشعار أو صورة الغلاف الرئيسية. اضبط الاثنين لتبدو علامتك التجارية موثوقة عند النقر.</p>
+      <div style="font-size: 0.75rem; color: #94a3b8;">الوقت التقديري للإنجاز: <strong>5 دقائق</strong></div>
+    </div>
+  
+    <div class="pillar-card" style="border-right: 4px solid var(--success);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-weight: 800; font-size: 0.95rem;">⚡ وصف النشاط التجاري قصير جداً</span>
+        <span class="badge" style="color: var(--success); font-family: Outfit; font-weight: 700;">+1.5 نقاط</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">اكتب وصفاً مفصلاً (ما بين 250 إلى 750 حرفاً) يشرح خدماتك وأهم ما يميزك مع ذكر منطقتك الجغرافية.</p>
+      <div style="font-size: 0.75rem; color: #94a3b8;">الوقت التقديري للإنجاز: <strong>5 دقائق</strong></div>
+    </div>
+  
+    </div>
+
+    <!-- AI Intelligence Suite -->
+    
+    <h3 class="section-title">🤖 حلول ومحتوى جاهز مولد بالذكاء الاصطناعي <span></span></h3>
+    
+    
+      <div class="ai-card">
+        <h4 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 8px;">💬 ردود جاهزة على التقييمات غير المردود عليها:</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">تم تضمين اسم النشاط والكلمات المفتاحية وسياق الحي تلقائياً لدعم السيو المحلي.</p>
+        
+          <div class="template-box">
+            <button class="copy-btn" onclick="copyText('ai-rep-0')">نسخ الرد 📋</button>
+            <div style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 4px;">
+              تقييم من <strong>يوسف رامي</strong> (3 نجوم): "الدكتور ممتاز في شغله لكن العيادة زحمة جداً وخدمة العملاء في الاستقبال محتاجة تحسين."
+            </div>
+            <div id="ai-rep-0" style="font-size: 0.95rem; line-height: 1.6; color: #f8fafc; padding-left: 70px;">
+              عزيزي يوسف، نشكرك على ملاحظتك القيمة. نعتذر لأن تجربة الانتظار في العيادة لم تكن بالمستوى المطلوب. رضاك وجودة الخدمة كطبيب أسنان في عيادة د. حسام لطب الأسنان هي أولويتنا القصوى. نرجو منك التواصل معنا على الرقم +201011223344 لنتعرف على تفاصيل أكثر ونرتب لك موعدًا يناسبك بدون انتظار. نتطلع لخدمتك مرة أخرى.
+            </div>
+          </div>
+        
+      </div>
+    
+
+    
+
+    
+      <div class="ai-card">
+        <h4 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 8px;">📌 منشورات وعروض مقترحة للأسبوع القادم (Google Posts):</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 12px;">
+          
+            <div class="template-box" style="position: relative;">
+              <button class="copy-btn" onclick="copyText('ai-post-0')">نسخ 📋</button>
+              <div style="font-weight: 800; font-size: 0.95rem; color: #60a5fa; margin-bottom: 6px;">مرحباً بكم في عيادة د. حسام لطب الأسنان</div>
+              <div id="ai-post-0" style="font-size: 0.88rem; line-height: 1.6; color: #e2e8f0; margin-bottom: 10px;">
+                
+              </div>
+              <div class="badge" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd;">زر الإجراء: [اتصل الآن]</div>
+            </div>
+          
+        </div>
+      </div>
+    
+  
+
+    <footer style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--card-border); font-size: 0.85rem; color: var(--text-muted);">
+      تم إنشاء هذا التقرير تلقائياً بواسطة محرك <strong>Maps SEO Core Engine</strong> المدعوم بالذكاء الاصطناعي 120B.
+    </footer>
+  </div>
+
+  <div id="toast">تم النسخ إلى الحافظة بنجاح!</div>
+
+  <script>
+    function copyText(elemId) {
+      const text = document.getElementById(elemId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      });
+    }
+  </script>
+</body>
+</html>

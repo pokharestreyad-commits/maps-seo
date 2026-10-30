@@ -1,0 +1,385 @@
+// Maps SEO Pro - Frontend Controller
+
+// Pre-packaged realistic demo datasets for instant 1-click testing
+const DEMO_PRESETS = {
+  clinic: {
+    placeData: {
+      name: 'عيادة د. حسام لطب الأسنان',
+      category: 'طبيب أسنان',
+      secondaryCategories: ['عيادة أسنان'],
+      address: 'شارع النصر، المعادي، القاهرة',
+      phone: '+201011223344',
+      website: 'https://dr-hossam-dental.com',
+      rating: 4.1,
+      userRatingsTotal: 38,
+      photosCount: 8,
+      hasLogo: true,
+      hasCoverPhoto: false,
+      attributes: ['الدفع نقداً'],
+      reviews: [
+        {
+          author: 'يوسف رامي',
+          rating: 3,
+          text: 'الدكتور ممتاز في شغله لكن العيادة زحمة جداً وخدمة العملاء في الاستقبال محتاجة تحسين.'
+        }
+      ]
+    },
+    competitors: [
+      {
+        name: 'مركز النخبة التخصصي لطب وزراعة الأسنان',
+        category: 'طبيب أسنان',
+        secondaryCategories: ['مركز زراعة أسنان', 'عيادة تجميل وتبييض أسنان', 'تقويم أسنان'],
+        address: 'ميدان الجزائر، المعادي، القاهرة',
+        rating: 4.8,
+        userRatingsTotal: 290,
+        photosCount: 65,
+        hasLogo: true,
+        hasCoverPhoto: true
+      },
+      {
+        name: 'سمايل كير كلينك المعادي',
+        category: 'طبيب أسنان',
+        secondaryCategories: ['مركز زراعة أسنان', 'عيادة أسنان للأطفال'],
+        address: 'شارع 9، المعادي، القاهرة',
+        rating: 4.5,
+        userRatingsTotal: 120,
+        photosCount: 28,
+        hasLogo: true,
+        hasCoverPhoto: true
+      }
+    ]
+  },
+  restaurant: {
+    placeData: {
+      name: 'مطعم البرنس - أفضل وأرخص كباب ومشويات فيصل',
+      category: 'مطعم',
+      secondaryCategories: [],
+      address: 'شارع فيصل، الجيزة',
+      phone: '',
+      website: 'http://my-unsecure-restaurant.com',
+      rating: 3.6,
+      userRatingsTotal: 8,
+      photosCount: 2,
+      hasLogo: false,
+      hasCoverPhoto: false,
+      reviews: [
+        {
+          author: 'محمود السيد',
+          rating: 2,
+          text: 'الأكل اتأخر جداً والطلب جه بارد ومش مطابق للي طلبناه.'
+        }
+      ]
+    },
+    competitors: [
+      {
+        name: 'مشويات قصر الكبابجي',
+        category: 'مطعم مشويات',
+        secondaryCategories: ['مطعم عائلي', 'خدمة توصيل طعام'],
+        address: 'شارع فيصل، الجيزة',
+        rating: 4.6,
+        userRatingsTotal: 410,
+        photosCount: 80,
+        hasLogo: true,
+        hasCoverPhoto: true
+      }
+    ]
+  },
+  cafe: {
+    placeData: {
+      name: 'روما كافيه & لاونج',
+      category: 'مقهى',
+      secondaryCategories: ['مطعم إيطالي', 'مقهى إنترنت', 'مخبز وحلويات'],
+      address: 'شارع التسعين الشمالي، التجمع الخامس، القاهرة',
+      phone: '+201122334455',
+      website: 'https://romacafe-eg.com',
+      rating: 4.7,
+      userRatingsTotal: 340,
+      photosCount: 85,
+      hasLogo: true,
+      hasCoverPhoto: true,
+      recentPhotosCount: 6,
+      ugcPhotosCount: 52,
+      attributes: ['جلسات خارجية', 'واي فاي مجاني', 'دفع إلكتروني', 'مناسب للعائلات'],
+      posts: [{ summary: 'عرض القهوة والكرواسون' }],
+      reviews: [
+        {
+          author: 'مروان طارق',
+          rating: 5,
+          text: 'أفضل سبانش لاتيه جربته في التجمع والمكان مريح للعمل.'
+        }
+      ]
+    },
+    competitors: []
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const auditForm = document.getElementById('auditForm');
+  const targetInput = document.getElementById('targetInput');
+  const loadingSection = document.getElementById('loadingSection');
+  const resultsSection = document.getElementById('resultsSection');
+  const demoBtns = document.querySelectorAll('.demo-btn');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const newAuditBtn = document.getElementById('newAuditBtn');
+  const printBtn = document.getElementById('printBtn');
+
+  // 1. Tab Navigation
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const targetId = btn.getAttribute('data-tab');
+      document.getElementById(targetId)?.classList.add('active');
+    });
+  });
+
+  // 2. Demo Buttons Click
+  demoBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.getAttribute('data-type');
+      const preset = DEMO_PRESETS[type];
+      if (preset) {
+        targetInput.value = preset.placeData.name;
+        triggerAuditRequest({
+          placeData: preset.placeData,
+          competitors: preset.competitors,
+          enableAi: true
+        });
+      }
+    });
+  });
+
+  // 3. Form Submit
+  auditForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = targetInput.value.trim();
+    if (!query) return;
+
+    triggerAuditRequest({
+      url: query,
+      enableAi: true
+    });
+  });
+
+  // 4. Reset Button
+  newAuditBtn?.addEventListener('click', () => {
+    resultsSection.classList.add('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    targetInput.focus();
+  });
+
+  // 5. Print Button
+  printBtn?.addEventListener('click', () => {
+    window.print();
+  });
+
+  // Main Audit Request Execution
+  async function triggerAuditRequest(payload) {
+    loadingSection.classList.remove('hidden');
+    resultsSection.classList.add('hidden');
+    loadingSection.scrollIntoView({ behavior: 'smooth' });
+
+    try {
+      const res = await fetch('/api/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || `خطأ في الاتصال بالسيرفر (${res.status})`);
+      }
+
+      const reportData = await res.json();
+      renderAuditResults(reportData);
+    } catch (err) {
+      alert(`⚠️ تعذر إكمال الفحص: ${err.message}`);
+    } finally {
+      loadingSection.classList.add('hidden');
+    }
+  }
+
+  // Render Full Results
+  function renderAuditResults(data) {
+    const { business, audit, recommendations, competitorsAnalysis } = data;
+
+    // Header info
+    document.getElementById('bizName').textContent = business.name || 'النشاط التجاري';
+    document.getElementById('bizCategory').textContent = `🏷️ ${business.category || 'نشاط محلي'}`;
+    document.getElementById('bizAddress').textContent = `📍 ${business.address || 'العنوان محدد'}`;
+    document.getElementById('bizPhone').textContent = business.phone ? `📞 ${business.phone}` : '📞 لا يوجد هاتف مسجل';
+    document.getElementById('gradeDesc').textContent = audit.grade?.description || '';
+
+    // Score & Gauge
+    const scoreVal = audit.overallScore || 0;
+    document.getElementById('overallScoreVal').textContent = scoreVal;
+    const gradeSymbolElem = document.getElementById('gradeSymbol');
+    gradeSymbolElem.textContent = audit.grade?.symbol || 'B';
+    gradeSymbolElem.style.borderColor = audit.grade?.color || '#3b82f6';
+    gradeSymbolElem.style.color = audit.grade?.color || '#3b82f6';
+
+    const gaugeCircle = document.getElementById('gaugeCircle');
+    gaugeCircle.style.borderColor = audit.grade?.color || '#3b82f6';
+    gaugeCircle.style.boxShadow = `0 0 35px ${audit.grade?.color || '#3b82f6'}44`;
+
+    // Mini Stats
+    document.getElementById('starsVal').textContent = business.rating ? `${business.rating} / 5` : 'غير متوفر';
+    document.getElementById('reviewsCountVal').textContent = business.userRatingsTotal || 0;
+    
+    const potentialGain = (recommendations?.potentialScoreAfterFixes || scoreVal) - scoreVal;
+    document.getElementById('quickWinsGain').textContent = `+${Math.max(potentialGain, 5)}`;
+    document.getElementById('criticalIssuesCount').textContent = audit.criticalIssues?.length || 0;
+
+    // 1. Render 5 Pillars
+    const pillarsContainer = document.getElementById('pillarsContainer');
+    pillarsContainer.innerHTML = '';
+    (audit.breakdown || []).forEach(p => {
+      const color = p.percentage >= 80 ? 'var(--success)' : p.percentage >= 50 ? 'var(--warning)' : 'var(--danger)';
+      pillarsContainer.innerHTML += `
+        <div class="pillar-item">
+          <div class="pillar-top">
+            <span>${p.name}</span>
+            <span style="color: ${color}; font-family: Outfit;">${p.score}/${p.maxScore} (${p.percentage}%)</span>
+          </div>
+          <div class="p-bar">
+            <div class="p-fill" style="width: ${p.percentage}%; background: ${color}"></div>
+          </div>
+        </div>
+      `;
+    });
+
+    // Quick Wins List
+    const quickWinsContainer = document.getElementById('quickWinsContainer');
+    quickWinsContainer.innerHTML = '';
+    const wins = recommendations?.quickWins || [];
+    if (wins.length === 0) {
+      quickWinsContainer.innerHTML = '<div class="win-item"><p>لا توجد مكاسب سريعة متبقية؛ أداء الملف قوي جداً!</p></div>';
+    } else {
+      wins.forEach(w => {
+        quickWinsContainer.innerHTML += `
+          <div class="win-item">
+            <div class="win-top">
+              <strong>${w.task}</strong>
+              <span class="win-gain">+${w.pointsToGain} نقاط</span>
+            </div>
+            <p class="win-action">${w.action}</p>
+          </div>
+        `;
+      });
+    }
+
+    // 2. Render Competitors
+    renderCompetitors(competitorsAnalysis);
+
+    // 3. Render AI Suite
+    renderAiSuite(recommendations);
+
+    // Show Results Section
+    resultsSection.classList.remove('hidden');
+    resultsSection.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function renderCompetitors(comp) {
+    const compTabBtn = document.querySelector('[data-tab="competitorsTab"]');
+    if (!comp || !comp.hasCompetitorData) {
+      compTabBtn.style.display = 'none';
+      return;
+    }
+    compTabBtn.style.display = 'inline-block';
+
+    // Leaderboard
+    const tbody = document.getElementById('leaderboardBody');
+    tbody.innerHTML = '';
+    (comp.leaderboard || []).forEach(b => {
+      tbody.innerHTML += `
+        <tr class="${b.isYourBusiness ? 'active-row' : ''}">
+          <td>#${b.rank}</td>
+          <td>${b.name} ${b.isYourBusiness ? '👈 (نشاطك)' : ''}</td>
+          <td style="font-family: Outfit; font-weight: 700;">${b.score}/100</td>
+          <td>${b.isYourBusiness ? '<span style="color: var(--primary);">قيد الفحص</span>' : 'منافس'}</td>
+        </tr>
+      `;
+    });
+
+    // Missing categories
+    const tagsContainer = document.getElementById('missingCategoriesPills');
+    tagsContainer.innerHTML = '';
+    (comp.missingValuableCategories || []).forEach(c => {
+      tagsContainer.innerHTML += `<span class="tag-purple">+ ${c.category}</span>`;
+    });
+
+    // Strategy
+    const banner = document.getElementById('strategyBanner');
+    if (comp.aiStrategy) {
+      banner.style.display = 'block';
+      document.getElementById('executiveSummaryText').textContent = comp.aiStrategy.executiveSummary || '';
+      document.getElementById('attackStrategyText').textContent = comp.aiStrategy.attackStrategy || '';
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+
+  function renderAiSuite(rec) {
+    // Reviews
+    const reviewsList = document.getElementById('aiReviewsList');
+    reviewsList.innerHTML = '';
+    const aiReplies = rec?.aiReviewResponses || [];
+
+    if (aiReplies.length === 0) {
+      reviewsList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">لا توجد تقييمات معلقة غير مردود عليها حالياً.</p>';
+    } else {
+      aiReplies.forEach((r, idx) => {
+        reviewsList.innerHTML += `
+          <div class="copy-box" style="margin-bottom: 12px;">
+            <button class="copy-action-btn" onclick="copyElementText('reply-text-${idx}')">نسخ الرد 📋</button>
+            <div style="font-size: 0.82rem; color: #94a3b8; margin-bottom: 4px;">
+              تقييم من <strong>${r.author}</strong> (${r.rating} نجوم): "${r.customerText || 'تقييم بدون تعليق'}"
+            </div>
+            <div id="reply-text-${idx}" class="box-content">${r.aiGeneratedReply}</div>
+          </div>
+        `;
+      });
+    }
+
+    // Description
+    const descTextElem = document.getElementById('aiDescText');
+    const descBlock = document.getElementById('aiDescBlock');
+    if (rec?.aiGeneratedDescription?.description) {
+      descBlock.style.display = 'block';
+      descTextElem.textContent = rec.aiGeneratedDescription.description;
+    } else {
+      descBlock.style.display = 'none';
+    }
+
+    // Posts
+    const postsGrid = document.getElementById('aiPostsGrid');
+    postsGrid.innerHTML = '';
+    const posts = rec?.aiGeneratedPosts || [];
+    posts.forEach((p, idx) => {
+      postsGrid.innerHTML += `
+        <div class="post-card">
+          <button class="copy-action-btn" onclick="copyElementText('post-body-${idx}')">نسخ 📋</button>
+          <div class="post-hook">${p.hook}</div>
+          <div id="post-body-${idx}" class="post-body">${p.body}</div>
+          <span class="badge" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd;">زر الإجراء: [${p.callToAction || 'اتصل الآن'}]</span>
+        </div>
+      `;
+    });
+  }
+});
+
+// Global copy helper
+window.copyElementText = function(elemId) {
+  const el = document.getElementById(elemId);
+  if (!el) return;
+  const text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    if (toast) {
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+  });
+};

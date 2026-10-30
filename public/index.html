@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maps SEO Pro | نظام فحص وتحسين خرائط جوجل بالذكاء الاصطناعي</title>
+  <meta name="description" content="أداة فحص متقدمة لتحسين ترتيب الأنشطة التجارية على خرائط جوجل والتفوق على المنافسين في الـ Google 3-Pack بالذكاء الاصطناعي.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <div class="app-layout">
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="brand-icon">📍</div>
+        <div class="brand-text">
+          <h1>Maps SEO <span>Pro</span></h1>
+          <p>محرك السيو المحلي وخرائط جوجل بالذكاء الاصطناعي</p>
+        </div>
+      </div>
+      <div class="nav-badges">
+        <span class="pill-badge pill-purple">⚡ Groq 120B AI</span>
+        <span class="pill-badge pill-blue">🗺️ Google 3-Pack Ready</span>
+      </div>
+    </header>
+
+    <!-- Main Hero & Audit Form -->
+    <main>
+      <section class="hero-section">
+        <div class="hero-content">
+          <span class="hero-tag">🚀 الأداة رقم 1 للمسوقين وأصحاب الأنشطة التجارية</span>
+          <h2 class="hero-title">افحص قوة ظهورك على <span>خرائط جوجل</span> وتصدر نتائج البحث في منطقتك</h2>
+          <p class="hero-subtitle">
+            اكتشف أسباب تأخر ترتيبك، واعرف ما يفعله منافسوك لتجاوزك، واحصل على تقرير فحص تفصيلي مع ردود جاهزة ومنشورات أسبوعية مولدة بالذكاء الاصطناعي.
+          </p>
+
+          <!-- Search & Input Card -->
+          <div class="search-card">
+            <form id="auditForm">
+              <div class="input-wrapper">
+                <span class="input-icon">🔍</span>
+                <input 
+                  type="text" 
+                  id="targetInput" 
+                  placeholder="ضع رابط النشاط على خرائط جوجل (Google Maps Link) أو اسم المكان والمدينة..." 
+                  required
+                >
+                <button type="submit" id="submitBtn" class="submit-btn">
+                  <span>بدء الفحص الذكي</span>
+                  <span class="btn-arrow">←</span>
+                </button>
+              </div>
+
+              <!-- Quick Demo Samples -->
+              <div class="demo-samples">
+                <span>أو جرب نماذج فحص جاهزة:</span>
+                <button type="button" class="demo-btn" data-type="clinic">🏥 عيادة أسنان (متوسطة)</button>
+                <button type="button" class="demo-btn" data-type="restaurant">🍖 مطعم مشويات (ضعيف)</button>
+                <button type="button" class="demo-btn" data-type="cafe">☕ كافيه لاونج (متصدر)</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading State Indicator -->
+      <section id="loadingSection" class="loading-section hidden">
+        <div class="loader-spinner"></div>
+        <h3 id="loadingText">جاري فحص النشاط وتحليل معايير خريطة جوجل...</h3>
+        <div class="loading-steps">
+          <div class="step-item active">1. جلب البيانات وفك الرابط</div>
+          <div class="step-item active">2. حساب سكور السيو المحلي (0-100)</div>
+          <div class="step-item active">3. تحليل الفجوة مع المنافسين</div>
+          <div class="step-item active">4. توليد الحلول بالذكاء الاصطناعي 120B</div>
+        </div>
+      </section>
+
+      <!-- Audit Results Dashboard -->
+      <section id="resultsSection" class="results-section hidden">
+        
+        <!-- Results Header Card -->
+        <div class="result-hero-card">
+          <div class="result-info">
+            <div class="biz-badges-bar">
+              <span id="bizCategory" class="badge">🏷️ عيادة</span>
+              <span id="bizAddress" class="badge">📍 القاهرة</span>
+              <span id="bizPhone" class="badge">📞 هاتف متاح</span>
+            </div>
+            <h2 id="bizName" class="result-biz-name">اسم النشاط التجاري</h2>
+            <p id="gradeDesc" class="result-desc">وصف الحالة وتقييم الأداء العام للملف على الخريطة.</p>
+            <div class="quick-action-bar">
+              <button id="printBtn" class="btn btn-secondary">🖨️ طباعة وحفظ التقرير PDF</button>
+              <button id="newAuditBtn" class="btn btn-ghost">🔄 فحص نشاط آخر</button>
+            </div>
+          </div>
+
+          <!-- Circular Score Gauge -->
+          <div class="gauge-container">
+            <div class="gauge-circle" id="gaugeCircle">
+              <span id="overallScoreVal" class="gauge-number">0</span>
+              <span class="gauge-label">من 100</span>
+            </div>
+            <div id="gradeSymbol" class="grade-pill">A+</div>
+          </div>
+        </div>
+
+        <!-- Metrics Overview Grid -->
+        <div class="overview-grid">
+          <div class="mini-stat-card">
+            <div class="stat-icon stat-icon-amber">⭐</div>
+            <div>
+              <div id="starsVal" class="stat-num">4.5</div>
+              <div class="stat-label">متوسط النجوم</div>
+            </div>
+          </div>
+          <div class="mini-stat-card">
+            <div class="stat-icon stat-icon-blue">💬</div>
+            <div>
+              <div id="reviewsCountVal" class="stat-num">120</div>
+              <div class="stat-label">إجمالي التقييمات</div>
+            </div>
+          </div>
+          <div class="mini-stat-card">
+            <div class="stat-icon stat-icon-emerald">⚡</div>
+            <div>
+              <div id="quickWinsGain" class="stat-num">+15</div>
+              <div class="stat-label">نقاط فورية مستهدفة</div>
+            </div>
+          </div>
+          <div class="mini-stat-card">
+            <div class="stat-icon stat-icon-rose">🚨</div>
+            <div>
+              <div id="criticalIssuesCount" class="stat-num">3</div>
+              <div class="stat-label">مشاكل حرجة بحاجة لتدخل</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="pillarsTab">📊 ركائز السيو والمشاكل</button>
+          <button class="tab-btn" data-tab="competitorsTab">⚔️ مقارنة المنافسين والهجوم</button>
+          <button class="tab-btn" data-tab="aiTab">🤖 الذكاء الاصطناعي والحلول الجاهزة</button>
+        </div>
+
+        <!-- Tab 1: 5 Pillars & Issues -->
+        <div id="pillarsTab" class="tab-content active">
+          <h3 class="tab-heading">تحليل ركائز السيو المحلي الخمس</h3>
+          <div id="pillarsContainer" class="pillars-grid"></div>
+
+          <h3 class="tab-heading mt-35">⚡ قائمة المكاسب السريعة (Quick Wins في 5 دقائق)</h3>
+          <div id="quickWinsContainer" class="quick-wins-grid"></div>
+        </div>
+
+        <!-- Tab 2: Competitor Benchmark -->
+        <div id="competitorsTab" class="tab-content">
+          <div id="competitorsWrapper">
+            <div class="leaderboard-card">
+              <h3 class="tab-heading">🏆 لوحة الصدارة في المنطقة (Google 3-Pack Leaderboard)</h3>
+              <table class="styled-table">
+                <thead>
+                  <tr>
+                    <th>الترتيب التقديري</th>
+                    <th>النشاط التجاري</th>
+                    <th>السكور الإجمالي</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
+                <tbody id="leaderboardBody"></tbody>
+              </table>
+            </div>
+
+            <!-- Missing Categories -->
+            <div class="comp-box">
+              <h4>🎯 تصنيفات فرعية يستغلها المنافسون وأنت محروم منها:</h4>
+              <div id="missingCategoriesPills" class="tags-cloud"></div>
+            </div>
+
+            <!-- AI Attack Strategy -->
+            <div class="strategy-banner" id="strategyBanner">
+              <div class="strategy-header">🧠 الرؤية التنفيذية واستراتيجية الهجوم (Groq 120B AI):</div>
+              <p id="executiveSummaryText" class="strategy-text"></p>
+              <div class="strategy-subtitle">⚔️ خطة العمل المقترحة لتصدر المركز الأول:</div>
+              <p id="attackStrategyText" class="strategy-text formatted"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: AI Intelligence Suite -->
+        <div id="aiTab" class="tab-content">
+          <div class="ai-suite-container">
+            <!-- Review Responses -->
+            <div class="ai-block">
+              <div class="ai-block-header">
+                <h4>💬 ردود جاهزة على التقييمات غير المردود عليها (مع حقن الكلمات المفتاحية):</h4>
+                <p>انسخ الرد بضغطة زر والصقه في ملفك لرفع تفاعل الحساب وتقوية ظهورك.</p>
+              </div>
+              <div id="aiReviewsList" class="cards-stack"></div>
+            </div>
+
+            <!-- GBP Description -->
+            <div class="ai-block" id="aiDescBlock">
+              <div class="ai-block-header">
+                <h4>📄 وصف نشاط تجاري مهيأ لمحركات البحث (GBP Description):</h4>
+                <p>وصف متوافق مع سياسات جوجل وخالٍ من الكلمات المحظورة بطول مثالي.</p>
+              </div>
+              <div class="copy-box">
+                <button class="copy-action-btn" onclick="copyElementText('aiDescText')">نسخ الوصف 📋</button>
+                <div id="aiDescText" class="box-content"></div>
+              </div>
+            </div>
+
+            <!-- Google Posts -->
+            <div class="ai-block" id="aiPostsBlock">
+              <div class="ai-block-header">
+                <h4>📌 منشورات وعروض مقترحة للأسبوع القادم (Google Posts):</h4>
+                <p>منشورات ترويجية مكثفة مع عنوان خاطف وزر إجراء فوري لجلب الزبائن.</p>
+              </div>
+              <div id="aiPostsGrid" class="posts-grid"></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Maps SEO Pro &copy; 2026 | مدعوم بأحدث خوارزميات الذكاء الاصطناعي لفحص خرائط جوجل</p>
+    </footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">تم النسخ بنجاح! 📋</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
