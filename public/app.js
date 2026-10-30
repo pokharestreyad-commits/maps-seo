@@ -566,22 +566,40 @@ document.addEventListener('DOMContentLoaded', () => {
       autoApplyCatsBtn.onclick = async () => {
         const orig = autoApplyCatsBtn.innerHTML;
         autoApplyCatsBtn.disabled = true;
-        autoApplyCatsBtn.innerHTML = '⏳ جاري التطبيق في جوجل...';
+        autoApplyCatsBtn.innerHTML = '⏳ جاري فحص تصريح الدخول والربط بـ Google...';
+        const missingCats = data.competitorsAnalysis?.missingValuableCategories || [];
+        const catsText = missingCats.map(c => c.category).join('، ') || 'وكالة تسويق رقمي، تصميم مواقع، إعلانات ممولة، سيو';
+
         try {
           const res = await fetch('/api/action', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               action: 'apply_categories',
-              businessName: data.business?.name || 'رسلان للتسويق'
+              businessName: data.business?.name || 'رسلان للتسويق',
+              data: { categoriesText: catsText }
             })
           });
           const json = await res.json();
-          autoApplyCatsBtn.innerHTML = '✅ تم اعتماد وتطبيق التصنيفات في جوجل! 🎉';
-          autoApplyCatsBtn.classList.remove('btn-primary');
-          autoApplyCatsBtn.classList.add('btn-success');
-          boostScore(15);
-          showToast(json.message || 'تم اعتماد التصنيفات بنجاح!');
+          if (json.requiresAuth) {
+            autoApplyCatsBtn.disabled = false;
+            autoApplyCatsBtn.innerHTML = '⚠️ يلزم تصريح المالك في Google (انقر هنا)';
+            autoApplyCatsBtn.classList.remove('btn-primary');
+            autoApplyCatsBtn.classList.add('btn-warning');
+            openRealActionModal({
+              title: 'تطبيق وإضافة التصنيفات في بطاقة Google Maps',
+              subtitle: 'حماية خوادم Google Business Profile لملكية النشاط',
+              explanation: 'خوارزميات جوجل تطلب إثبات ملكيتك لنشاط "رسلان للتسويق" لإضافة الفئات لمنع العبث. تم نسخ التصنيفات المقترحة لحافظتك تلقائياً لتطبيقها بنقرة واحدة.',
+              copyPayload: catsText,
+              directUrl: json.directUrl || `https://www.google.com/search?q=${encodeURIComponent(data.business?.name || 'رسلان للتسويق')}&cad=h`
+            });
+          } else if (json.actualExecuted) {
+            autoApplyCatsBtn.innerHTML = '✅ تم تطبيق التصنيفات فعلياً في خوادم جوجل! 🎉';
+            autoApplyCatsBtn.classList.remove('btn-primary', 'btn-warning');
+            autoApplyCatsBtn.classList.add('btn-success');
+            boostScore(15);
+            showToast(json.message || 'تم اعتماد التصنيفات بنجاح!');
+          }
         } catch (err) {
           autoApplyCatsBtn.disabled = false;
           autoApplyCatsBtn.innerHTML = orig;
@@ -607,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
       autoApplyDescBtn.onclick = async () => {
         const orig = autoApplyDescBtn.innerHTML;
         autoApplyDescBtn.disabled = true;
-        autoApplyDescBtn.innerHTML = '⏳ جاري تحديث الوصف في ملف جوجل مابس...';
+        autoApplyDescBtn.innerHTML = '⏳ جاري فحص تصريح الدخول وتحديث الوصف في Google...';
         try {
           const res = await fetch('/api/action', {
             method: 'POST',
@@ -619,13 +637,25 @@ document.addEventListener('DOMContentLoaded', () => {
             })
           });
           const json = await res.json();
-          if (!res.ok) throw new Error(json.error || 'تعذر التحديث');
-
-          autoApplyDescBtn.innerHTML = '✅ تم تحديث الوصف بنجاح في ملف خرائط جوجل! 🎉';
-          autoApplyDescBtn.classList.remove('btn-primary');
-          autoApplyDescBtn.classList.add('btn-success');
-          boostScore(12);
-          showToast(json.message || 'تم تحديث الوصف بنجاح في ملف خرائط جوجل!');
+          if (json.requiresAuth) {
+            autoApplyDescBtn.disabled = false;
+            autoApplyDescBtn.innerHTML = '⚠️ يلزم تصريح المالك في Google (انقر هنا)';
+            autoApplyDescBtn.classList.remove('btn-primary');
+            autoApplyDescBtn.classList.add('btn-warning');
+            openRealActionModal({
+              title: 'تحديث وصف النشاط في خرائط Google (750 حرف)',
+              subtitle: 'خوارزميات جوجل تشترط تصريح مالك النشاط لحماية بيانات بطاقتك',
+              explanation: 'تم فحص وتأكيد العملية: تعديل الوصف مباشرة في خوادم Google يتطلب إثبات ملكيتك لبطاقة "رسلان للتسويق". تم نسخ الوصف المعتمد (750 حرف) لحافظتك تلقائياً لتطبيقه بنقرة واحدة.',
+              copyPayload: activeDesc,
+              directUrl: json.directUrl || `https://www.google.com/search?q=${encodeURIComponent(data.business?.name || 'رسلان للتسويق')}&cad=h`
+            });
+          } else if (json.actualExecuted) {
+            autoApplyDescBtn.innerHTML = '✅ تم تحديث الوصف فعلياً في ملف خرائط جوجل! 🎉';
+            autoApplyDescBtn.classList.remove('btn-primary', 'btn-warning');
+            autoApplyDescBtn.classList.add('btn-success');
+            boostScore(12);
+            showToast(json.message || 'تم تحديث الوصف بنجاح في ملف خرائط جوجل!');
+          }
         } catch (err) {
           autoApplyDescBtn.disabled = false;
           autoApplyDescBtn.innerHTML = orig;
@@ -662,7 +692,9 @@ document.addEventListener('DOMContentLoaded', () => {
       autoReplyAllReviewsBtn.onclick = async () => {
         const orig = autoReplyAllReviewsBtn.innerHTML;
         autoReplyAllReviewsBtn.disabled = true;
-        autoReplyAllReviewsBtn.innerHTML = '⏳ جاري إرسال الردود التلقائية لخرائط جوجل...';
+        autoReplyAllReviewsBtn.innerHTML = '⏳ جاري فحص حساب التقييمات في Google...';
+        const repliesText = replies.map(r => `العميل: ${r.author} (${r.rating} نجوم)\nالرد: ${r.aiGeneratedReply}\n---`).join('\n\n') || 'شكراً جزيلاً لثقتكم الغالية في رسلان للتسويق!';
+
         try {
           const res = await fetch('/api/action', {
             method: 'POST',
@@ -670,15 +702,32 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({
               action: 'reply_reviews',
               businessName: data.business?.name || 'رسلان للتسويق',
-              data: { repliesCount: replies.length || 5 }
+              data: {
+                repliesCount: replies.length || 5,
+                allRepliesText: repliesText
+              }
             })
           });
           const json = await res.json();
-          autoReplyAllReviewsBtn.innerHTML = '✅ تم إرسال الردود الذكية آلياً لجميع المراجعات! 🎉';
-          autoReplyAllReviewsBtn.classList.remove('btn-primary');
-          autoReplyAllReviewsBtn.classList.add('btn-success');
-          boostScore(10);
-          showToast(json.message || 'تم إرسال الردود التلقائية بنجاح!');
+          if (json.requiresAuth) {
+            autoReplyAllReviewsBtn.disabled = false;
+            autoReplyAllReviewsBtn.innerHTML = '⚠️ يلزم تصريح المالك في Google (انقر هنا)';
+            autoReplyAllReviewsBtn.classList.remove('btn-primary');
+            autoReplyAllReviewsBtn.classList.add('btn-warning');
+            openRealActionModal({
+              title: 'إرسال الردود الذكية على تقييمات خرائط Google',
+              subtitle: 'الرد باسم النشاط التجاري يتطلب تصريح الدخول لحساب المالك',
+              explanation: 'الرد على العملاء بصفتك صاحب العمل يتطلب تسجيل دخولك في حساب إدارة النشاط. تم نسخ كافة الردود الذكية المهيأة بالسيو لحافظتك للرد فوراً في ثوانٍ.',
+              copyPayload: repliesText,
+              directUrl: json.directUrl || 'https://business.google.com/reviews'
+            });
+          } else if (json.actualExecuted) {
+            autoReplyAllReviewsBtn.innerHTML = '✅ تم إرسال الردود الذكية فعلياً لجميع المراجعات! 🎉';
+            autoReplyAllReviewsBtn.classList.remove('btn-primary', 'btn-warning');
+            autoReplyAllReviewsBtn.classList.add('btn-success');
+            boostScore(10);
+            showToast(json.message || 'تم إرسال الردود التلقائية بنجاح!');
+          }
         } catch (err) {
           autoReplyAllReviewsBtn.disabled = false;
           autoReplyAllReviewsBtn.innerHTML = orig;
@@ -1145,17 +1194,28 @@ ${postsList}
           const json = await res.json();
           if (!res.ok) throw new Error(json.error || 'تعذر النشر');
 
-          showToast(json.message || 'تمت جدولة ونشر المنشور بالصور بنجاح! 📸🎉');
-          boostScore(8);
-
-          // Reset composer form
-          textarea.value = '';
-          if (charCount) charCount.textContent = '0 / 1500';
-          if (removePhotoBtn) removePhotoBtn.click();
-          if (scheduleToggle) { scheduleToggle.checked = false; datetimeInput?.classList.add('hidden'); }
-
-          // Refresh Timeline Grid
-          loadScheduledTimeline();
+          if (json.requiresAuth) {
+            openRealActionModal({
+              title: 'تم حفظ وجدولة المشاركة بالصور في طابورك السحابي',
+              subtitle: 'حالة المشاركة: جاهزة وبانتظار تفعيل الجلسة السحابية أو النشر المباشر',
+              explanation: 'تم حفظ المشاركة بالكامل في جدولك. للنشر التلقائي في الموعد المحدد دون تدخلك، اربط كوكيز الحساب (Cookie Injection)، أو اضغط على الزر أدناه لفتح لوحة النشر في جوجل فوراً!',
+              copyPayload: `${text}\n\n[زر الإجراء المعتمد: ${cta}]`,
+              directUrl: json.directUrl || 'https://business.google.com/locations'
+            });
+            // Reset composer form
+            textarea.value = '';
+            if (charCount) charCount.textContent = '0 / 1500';
+            if (removePhotoBtn) removePhotoBtn.click();
+            if (scheduleToggle) { scheduleToggle.checked = false; datetimeInput?.classList.add('hidden'); }
+            loadScheduledTimeline();
+          } else if (json.actualExecuted) {
+            showToast(json.message || 'تم نشر المنشور بالصور بنجاح! 📸🎉');
+            boostScore(8);
+            textarea.value = '';
+            if (charCount) charCount.textContent = '0 / 1500';
+            if (removePhotoBtn) removePhotoBtn.click();
+            loadScheduledTimeline();
+          }
         } catch (err) {
           alert(`⚠️ تعذر النشر: ${err.message}`);
         } finally {
@@ -1263,28 +1323,116 @@ window.boostScore = function(points) {
 window.executeQuickWin = async function(btn, taskTitle, points) {
   const orig = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = '⏳ جاري التنفيذ في جوجل...';
+  btn.innerHTML = '⏳ جاري فحص تصريح Google...';
+  const bizName = window.currentAuditData?.business?.name || 'رسلان للتسويق';
+
   try {
     const res = await fetch('/api/action', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'execute_quick_win',
-        businessName: window.currentAuditData?.business?.name || 'رسلان للتسويق',
+        businessName: bizName,
         data: { taskTitle, pointsToGain: points }
       })
     });
     const json = await res.json();
-    btn.innerHTML = '✅ تم التنفيذ بنجاح! 🎉';
-    btn.classList.remove('btn-primary');
-    btn.classList.add('btn-success');
-    btn.closest('.win-item')?.classList.add('win-item-completed');
-    boostScore(points);
-    showToast(`🎉 ${json.message || 'تم تنفيذ الإجراء بنجاح بالنيابة عنك!'}`);
+    if (json.requiresAuth) {
+      btn.disabled = false;
+      btn.innerHTML = '⚠️ يلزم فتح جوجل لإتمامه (انقر)';
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-warning');
+      openRealActionModal({
+        title: `تنفيذ: ${taskTitle}`,
+        subtitle: 'إجراء يتطلب الوصول لبطاقة نشاطك التجاري في Google',
+        explanation: `لتطبيق "${taskTitle}" في خوادم جوجل فعلياً، اضغط فتح بطاقة النشاط لإتمامه في ثوانٍ، أو اربط كوكيز حسابك للأتمتة التامة. تم نسخ وتجهيز البيانات لحافظتك تلقائياً.`,
+        copyPayload: taskTitle,
+        directUrl: json.directUrl || `https://www.google.com/search?q=${encodeURIComponent(bizName)}&cad=h`
+      });
+    } else if (json.actualExecuted) {
+      btn.innerHTML = '✅ تم التنفيذ بنجاح! 🎉';
+      btn.classList.remove('btn-primary', 'btn-warning');
+      btn.classList.add('btn-success');
+      btn.closest('.win-item')?.classList.add('win-item-completed');
+      boostScore(points);
+      showToast(`🎉 ${json.message || 'تم تنفيذ الإجراء بنجاح بالنيابة عنك!'}`);
+    }
   } catch (err) {
     btn.disabled = false;
     btn.innerHTML = orig;
     alert(`تعذر تنفيذ الإجراء: ${err.message}`);
   }
+};
+
+// Global Real Execution Gateway Modal Handler
+window.openRealActionModal = function(config = {}) {
+  const modal = document.getElementById('realActionModal');
+  if (!modal) return;
+
+  const titleEl = document.getElementById('modalTitle');
+  const subEl = document.getElementById('modalSubtitle');
+  const expEl = document.getElementById('modalExplanation');
+  const payloadEl = document.getElementById('modalPayloadText');
+  const directLinkBtn = document.getElementById('modalDirectLinkBtn');
+  const closeBtn = document.getElementById('modalCloseBtn');
+  const dismissBtn = document.getElementById('modalDismissBtn');
+  const recopyBtn = document.getElementById('modalReCopyBtn');
+  const goToSessionBtn = document.getElementById('modalGoToSessionBtn');
+
+  if (titleEl) titleEl.textContent = config.title || 'التحقق الأمني من ملكية النشاط في Google';
+  if (subEl) subEl.textContent = config.subtitle || 'حماية أمنية من Google Business Profile لضمان ملكيتك لبطاقة النشاط';
+  if (expEl) expEl.textContent = config.explanation || config.message || 'خوارزميات جوجل تشترط تصريح مالك النشاط لتعديل البيانات في خوادمها.';
+  if (payloadEl) payloadEl.textContent = config.copyPayload || '';
+  if (directLinkBtn) {
+    directLinkBtn.href = config.directUrl || 'https://business.google.com/locations';
+  }
+
+  // Automatically copy payload to clipboard
+  if (config.copyPayload) {
+    navigator.clipboard.writeText(config.copyPayload).then(() => {
+      showToast('📋 تم نسخ البيانات المعتمدة لحافظتك تلقائياً!');
+    }).catch(() => {});
+  }
+
+  if (closeBtn) closeBtn.onclick = window.closeRealActionModal;
+  if (dismissBtn) dismissBtn.onclick = window.closeRealActionModal;
+
+  if (recopyBtn) {
+    recopyBtn.onclick = () => {
+      if (config.copyPayload) {
+        navigator.clipboard.writeText(config.copyPayload).then(() => {
+          showToast('تمت إعادة النسخ بنجاح! 📋');
+        });
+      }
+    };
+  }
+
+  if (goToSessionBtn) {
+    goToSessionBtn.onclick = () => {
+      window.closeRealActionModal();
+      // Switch to Calendar tab
+      const calTabBtn = document.querySelector('[data-tab="calendarTab"]');
+      if (calTabBtn) calTabBtn.click();
+      setTimeout(() => {
+        const sessionCard = document.querySelector('.cloud-session-card');
+        const cookieInput = document.getElementById('cookieInput');
+        if (sessionCard) {
+          sessionCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        if (cookieInput) {
+          cookieInput.focus();
+          cookieInput.style.boxShadow = '0 0 25px rgba(59, 130, 246, 0.8)';
+          setTimeout(() => { cookieInput.style.boxShadow = ''; }, 2500);
+        }
+      }, 300);
+    };
+  }
+
+  modal.classList.remove('hidden');
+};
+
+window.closeRealActionModal = function() {
+  const modal = document.getElementById('realActionModal');
+  if (modal) modal.classList.add('hidden');
 };
 

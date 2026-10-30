@@ -602,6 +602,66 @@
     </footer>
   </div>
 
+  <!-- Real Execution Gateway Modal (بوابة وتأكيد التنفيذ الفعلي المباشر) -->
+  <div id="realActionModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-icon-badge">🔐</div>
+        <div style="flex: 1;">
+          <h3 id="modalTitle" class="modal-title">التحقق الأمني من ملكية النشاط في Google</h3>
+          <p id="modalSubtitle" class="modal-subtitle">حماية أمنية من خوارزميات جوجل لضمان ملكيتك لبطاقة النشاط</p>
+        </div>
+        <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="إغلاق">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-alert-box">
+          <p id="modalExplanation">
+            خوارزميات Google تشترط تصريح مالك النشاط (Google Account) لتعديل البيانات في خوادم خرائط جوجل، وذلك لحماية بطاقتك من أي تعديل خارجي غير مصرح به.
+          </p>
+          <div class="clipboard-notice">
+            <span class="copy-tick">✅</span>
+            <span><strong>تم نسخ البيانات المحسّنة لحافظتك تلقائياً!</strong> جاهزة للصق الفوري بنقرة زر.</span>
+          </div>
+        </div>
+
+        <div class="modal-payload-preview">
+          <div class="payload-header">
+            <span>معاينة المحتوى الجاهز والمنسوخ (Payload):</span>
+            <button type="button" class="btn-mini-copy" id="modalReCopyBtn">إعادة النسخ 📋</button>
+          </div>
+          <pre id="modalPayloadText" class="payload-text"></pre>
+        </div>
+
+        <div class="modal-options-grid">
+          <!-- Option 1: 1-Click Direct Assist -->
+          <div class="modal-opt-card opt-direct">
+            <div class="opt-badge">⚡ الخيار الأول: تنفيذ فوري مباشر بنقرة واحدة</div>
+            <h4>فتح لوحة النشاط في Google ولصق البيانات</h4>
+            <p>يتم فتح صفحة تعديل نشاطك في جوجل مباشرة؛ اضغط فقط <strong>لصق (Ctrl + V)</strong> ثم حفظ في ثانيتين (مؤكد 100%)!</p>
+            <a id="modalDirectLinkBtn" href="https://business.google.com/locations" target="_blank" rel="noopener" class="btn btn-primary btn-modal-action">
+              🚀 فتح صفحة التعديل في Google الآن
+            </a>
+          </div>
+
+          <!-- Option 2: Cloud Bot Automation -->
+          <div class="modal-opt-card opt-cloud">
+            <div class="opt-badge">☁️ الخيار الثاني: الأتمتة السحابية 100%</div>
+            <h4>تشغيل الروبوت الآلي السحابي (24/7 Cloud Bot)</h4>
+            <p>اربط كوكيز جلستك لمرة واحدة فقط ليقوم الروبوت بتطبيق التعديلات ونشر المنشورات المجدولة تلقائياً دون أي تدخّل منك.</p>
+            <button type="button" id="modalGoToSessionBtn" class="btn btn-secondary btn-modal-action">
+              🍪 ربط كوكيز الحساب (في 30 ثانية)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="modalDismissBtn">إغلاق النافذة</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toast" class="toast">تم النسخ بنجاح! 📋</div>
 
