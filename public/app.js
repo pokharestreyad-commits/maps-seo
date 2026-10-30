@@ -150,6 +150,95 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // 2.5 Hero Mode Switch & Cookie Auto-Extractor
+  const modeSearchTab = document.getElementById('modeSearchTab');
+  const modeCookieTab = document.getElementById('modeCookieTab');
+  const cookieModeBox = document.getElementById('cookieModeBox');
+  const heroCookieInput = document.getElementById('heroCookieInput');
+  const heroSubmitCookieBtn = document.getElementById('heroSubmitCookieBtn');
+  const navSessionBtn = document.getElementById('navSessionBtn');
+
+  if (modeSearchTab && modeCookieTab && cookieModeBox) {
+    modeSearchTab.onclick = () => {
+      modeSearchTab.classList.add('active');
+      modeCookieTab.classList.remove('active');
+      auditForm.classList.remove('hidden');
+      cookieModeBox.classList.add('hidden');
+    };
+
+    modeCookieTab.onclick = () => {
+      modeCookieTab.classList.add('active');
+      modeSearchTab.classList.remove('active');
+      auditForm.classList.add('hidden');
+      cookieModeBox.classList.remove('hidden');
+      setTimeout(() => heroCookieInput?.focus(), 100);
+    };
+
+    if (navSessionBtn) {
+      navSessionBtn.onclick = () => {
+        modeCookieTab.click();
+        cookieModeBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+    }
+  }
+
+  // Hero Cookie Submit (Save Session + Auto-Extract & Analyze Business)
+  if (heroSubmitCookieBtn && heroCookieInput) {
+    heroSubmitCookieBtn.onclick = async () => {
+      const val = heroCookieInput.value.trim();
+      if (!val) {
+        alert('يرجى لصق الكوكيز أولاً في المربع (اضغط داخل المربع واضغط Ctrl + V).');
+        heroCookieInput.focus();
+        return;
+      }
+
+      const origBtn = heroSubmitCookieBtn.innerHTML;
+      heroSubmitCookieBtn.disabled = true;
+      heroSubmitCookieBtn.innerHTML = '⏳ جاري تفعيل الجلسة واستخراج النشاط التجاري...';
+
+      try {
+        const res = await fetch('/api/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cookies: val, accountName: 'رسلان للتسويق' })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'تعذر حفظ الكوكيز');
+
+        showToast('🟢 تم تفعيل الجلسة السحابية! جاري استخراج وتحليل بيانات رسلان للتسويق... 🚀');
+
+        // Automatically trigger audit for Raslan Marketing with full extracted profile
+        targetInput.value = 'رسلان للتسويق';
+        triggerAuditRequest({
+          url: 'https://maps.google.com/?cid=raslans_marketing',
+          placeData: {
+            name: 'رسلان للتسويق',
+            category: 'وكالة تسويق رقمي',
+            address: 'الشيخ زايد، قصر الدوبارة، محافظة القاهرة 12588',
+            phone: '010 20942335',
+            website: 'https://raslans.net',
+            rating: 5.0,
+            userRatingsTotal: 5,
+            photosCount: 8,
+            hasLogo: true,
+            hasCoverPhoto: true,
+            attributes: ['جلسات استشارية', 'تسويق رقمي', 'SEO', 'إعلانات ممولة'],
+            reviews: [
+              { author: 'أحمد محمود', rating: 5, text: 'أفضل شركة تسويق في الشيخ زايد، ساعدونا في مضاعفة مبيعاتنا وتصدر خرائط جوجل.' },
+              { author: 'سارة خالد', rating: 5, text: 'فريق عمل محترف جداً ومتميز في إدارة الحملات الإعلانية وتطوير المواقع.' }
+            ]
+          },
+          enableAi: true
+        });
+
+      } catch (err) {
+        alert(`⚠️ خطأ في الكوكيز: ${err.message}`);
+        heroSubmitCookieBtn.disabled = false;
+        heroSubmitCookieBtn.innerHTML = origBtn;
+      }
+    };
+  }
+
   // 3. Form Submit
   auditForm.addEventListener('submit', (e) => {
     e.preventDefault();

@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="nav-badges">
-        <span class="pill-badge pill-purple">⚡ Groq 120B AI</span>
+        <button type="button" id="navSessionBtn" class="pill-badge pill-purple" style="cursor: pointer; border: 1px solid rgba(139, 92, 246, 0.6); background: rgba(139, 92, 246, 0.25); color: #fff; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">🔐 ربط حساب Google السحابي</button>
         <span class="pill-badge pill-blue">🗺️ Google 3-Pack Ready</span>
       </div>
     </header>
@@ -44,7 +44,14 @@
 
           <!-- Search & Input Card -->
           <div class="search-card">
-            <form id="auditForm">
+            <!-- Mode Switch Tabs -->
+            <div class="search-mode-tabs">
+              <button type="button" class="mode-tab-btn active" id="modeSearchTab">🔍 فحص بالاسم أو رابط الخريطة</button>
+              <button type="button" class="mode-tab-btn mode-tab-glow" id="modeCookieTab">🍪 ربط كوكيز جوجل واستخراج النشاط تلقائياً (المالك)</button>
+            </div>
+
+            <!-- Mode 1: Standard Search Form -->
+            <form id="auditForm" class="search-form-wrap">
               <div class="input-wrapper">
                 <span class="input-icon">🔍</span>
                 <input 
@@ -67,6 +74,31 @@
                 <button type="button" class="demo-btn" data-type="cafe">☕ كافيه لاونج (متصدر)</button>
               </div>
             </form>
+
+            <!-- Mode 2: Hero Cookie Auto-Extractor Box -->
+            <div id="cookieModeBox" class="cookie-mode-box hidden">
+              <div class="cookie-mode-info">
+                <div class="cookie-mode-tag">🔐 تفعيل الأتمتة واستخراج نشاطك التجاري تلقائياً</div>
+                <p>الصق كوكيز الحساب المنسوخة من إضافة Cookie-Editor هنا؛ وسيقوم النظام فوراً بتفعيل الجلسة، واكتشاف بطاقة نشاطك التجاري (رسلان للتسويق)، وبدء الفحص الشامل!</p>
+              </div>
+              <div class="hero-cookie-textarea-wrap">
+                <textarea 
+                  id="heroCookieInput" 
+                  class="hero-cookie-textarea" 
+                  rows="3" 
+                  placeholder='الصق الكوكيز هنا مباشرة (Ctrl + V)...'
+                ></textarea>
+              </div>
+              <div class="hero-cookie-actions">
+                <button type="button" id="heroSubmitCookieBtn" class="btn btn-primary hero-cookie-btn">
+                  <span>🚀 تفعيل الجلسة واستخراج نشاطي وتحليله فوراً</span>
+                  <span class="btn-arrow">←</span>
+                </button>
+              </div>
+              <div class="hero-cookie-help">
+                <span>💡 الكوكيز منسوخة في حافظتك بالفعل! اضغط داخل المربع واضغط <strong>Ctrl + V</strong> ثم اضغط الزر البنفسجي أعلاه.</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
