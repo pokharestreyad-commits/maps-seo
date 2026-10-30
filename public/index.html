@@ -149,6 +149,8 @@
           <button class="tab-btn active" data-tab="pillarsTab">📊 ركائز السيو والمشاكل</button>
           <button class="tab-btn" data-tab="competitorsTab">⚔️ مقارنة المنافسين والهجوم</button>
           <button class="tab-btn" data-tab="aiTab">🤖 الذكاء الاصطناعي والحلول الجاهزة</button>
+          <button class="tab-btn" data-tab="calendarTab">📅 تقويم وجدولة المنشورات</button>
+          <button class="tab-btn" data-tab="fixCenterTab">⚡ مركز تطبيق الإصلاحات (Fix Center)</button>
         </div>
 
         <!-- Tab 1: 5 Pillars & Issues -->
@@ -225,6 +227,146 @@
                 <p>منشورات ترويجية مكثفة مع عنوان خاطف وزر إجراء فوري لجلب الزبائن.</p>
               </div>
               <div id="aiPostsGrid" class="posts-grid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Content & Scheduling Calendar -->
+        <div id="calendarTab" class="tab-content">
+          <div class="calendar-wrapper">
+            <div class="calendar-header-card">
+              <div>
+                <h3 class="tab-heading">🗓️ تقويم وجدولة المنشورات الأسبوعية (Google Posts Calendar)</h3>
+                <p class="tab-subdesc">النشر الأسبوعي المستمر يرسل إشارات حية (Freshness Signals) لخوارزميات جوجل، مما يرفع تصنيف النشاط في خوارزمية البروز والشهرة (Prominence).</p>
+              </div>
+              <div class="calendar-actions">
+                <button class="btn btn-secondary" id="exportScheduleBtn">تصدير الجدول (CSV) 📥</button>
+              </div>
+            </div>
+
+            <!-- Schedule Timeline Grid -->
+            <div id="scheduledPostsTimeline" class="schedule-timeline-grid"></div>
+
+            <!-- Cloud Automation / Browserless Info Box -->
+            <div class="automation-card">
+              <div class="automation-header">
+                <div class="automation-icon">☁️</div>
+                <div>
+                  <h4>محرك النشر السحابي التلقائي (Cloud Auto-Poster Engine)</h4>
+                  <p>كيف تنشر المنظومة تلقائياً 24/7 دون الحاجة لدفع 10$ لجوجل API وبدون فتح جهازك</p>
+                </div>
+              </div>
+              <div class="automation-body">
+                <div class="automation-steps-grid">
+                  <div class="auto-step">
+                    <span class="step-badge">1</span>
+                    <strong>متى ولماذا نستخدم Browserless.io؟</strong>
+                    <p>لأن Vercel سحابي خفيف بدون واجهة متصفح، نقوم بربط خدمة <strong>Browserless.io</strong> كمتصفح خفي سحابي يفتح حسابك وينشر البوست المجدول تلقائياً في ثوانٍ دون دفع رسوم Google API. (الحساب مجاني يعطي 1,000 جلسة شهرياً).</p>
+                  </div>
+                  <div class="auto-step">
+                    <span class="step-badge">2</span>
+                    <strong>النشر المباشر بنقرة واحدة (One-Click Instant)</strong>
+                    <p>يمكنك أيضاً الضغط على زر <strong>"نشر فوري في خرائط جوجل 🚀"</strong> الموجود في كل بطاقة؛ حيث ينسخ المنشور ويفتح لوحة إدارة بطاقتك لتضغط نشر فوراً دون أي إعدادات سحابية.</p>
+                  </div>
+                  <div class="auto-step">
+                    <span class="step-badge">3</span>
+                    <strong>حالة المحرك السحابي (Engine Ready)</strong>
+                    <div class="connection-status-pill">
+                      <span class="status-dot active"></span>
+                      <span>كود الأتمتة والـ Puppeteer مهيأ ومدعوم سحابياً ومحلياً</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: 1-Click Fix Center -->
+        <div id="fixCenterTab" class="tab-content">
+          <div class="fix-center-wrapper">
+            <div class="fix-header-card">
+              <div>
+                <h3 class="tab-heading">⚡ مركز تطبيق الإصلاحات الفورية (1-Click Fix Center)</h3>
+                <p class="tab-subdesc">كل ما يلزمك لرفع سكور نشاطك من الوضع الحالي إلى المركز الأول في الـ 3-Pack دون الحاجة للبحث والتفكير.</p>
+              </div>
+              <button class="btn btn-primary" id="downloadFixPackBtn">تحميل حزمة الإصلاح الشاملة (Action Pack) 📑</button>
+            </div>
+
+            <!-- Score Simulation Banner -->
+            <div class="score-sim-card">
+              <div class="sim-info">
+                <span class="sim-title">🚀 المحاكاة التقديرية بعد تطبيق هذه الحزمة:</span>
+                <span class="sim-desc">حدد الإصلاحات المنجزة لمشاهدة الارتفاع الفوري في السكور المتوقع</span>
+              </div>
+              <div class="sim-scores">
+                <div class="sim-val current">السكور الحالي: <strong id="simCurrentScore">--</strong></div>
+                <div class="sim-arrow">➔</div>
+                <div class="sim-val target">السكور المتوقع: <strong id="simTargetScore">--</strong></div>
+              </div>
+            </div>
+
+            <!-- Fix Checklist & Action Cards -->
+            <div class="fix-cards-grid">
+              <!-- Fix 1: Categories -->
+              <div class="fix-box" id="fixBoxCategories">
+                <div class="fix-box-header">
+                  <div class="fix-box-title">
+                    <input type="checkbox" class="fix-checkbox" id="checkCat" data-gain="15">
+                    <label for="checkCat"><strong>1. الفئات والتصنيفات (الملاءمة Relevancy)</strong></label>
+                  </div>
+                  <span class="gain-badge">+15 نقطة سيو</span>
+                </div>
+                <p class="fix-desc">أضف الفئات المفقودة التي يستغلها منافسوك في المركز الأول لفتح مجالات بحث جديدة:</p>
+                <div class="fix-categories-list" id="fixCatList"></div>
+                <button class="copy-action-btn" id="copyCatsBtn">نسخ الفئات 📋</button>
+              </div>
+
+              <!-- Fix 2: 750-Char Description -->
+              <div class="fix-box" id="fixBoxDesc">
+                <div class="fix-box-header">
+                  <div class="fix-box-title">
+                    <input type="checkbox" class="fix-checkbox" id="checkDesc" data-gain="12">
+                    <label for="checkDesc"><strong>2. وصف النشاط المحسن جغرافياً (750 حرف)</strong></label>
+                  </div>
+                  <span class="gain-badge">+12 نقطة سيو</span>
+                </div>
+                <p class="fix-desc">وصف مهيأ بمصطلحات السيو والخدمات المحلية ومنطقتك الجغرافية لزيادة مطابقة كلمات البحث:</p>
+                <div class="copy-box">
+                  <button class="copy-action-btn" onclick="copyElementText('fixDescContent')">نسخ الوصف 📋</button>
+                  <div id="fixDescContent" class="box-content"></div>
+                </div>
+              </div>
+
+              <!-- Fix 3: Review Responses -->
+              <div class="fix-box" id="fixBoxReviews">
+                <div class="fix-box-header">
+                  <div class="fix-box-title">
+                    <input type="checkbox" class="fix-checkbox" id="checkRev" data-gain="10">
+                    <label for="checkRev"><strong>3. الرد على المراجعات غير المجاب عليها</strong></label>
+                  </div>
+                  <span class="gain-badge">+10 نقاط سيو</span>
+                </div>
+                <p class="fix-desc">الردود تعيد استهداف الكلمات الدلالية وتعطي خوارزميات جوجل إشارة تفاعل حي:</p>
+                <div id="fixReviewsBatch" class="cards-stack"></div>
+                <button class="btn btn-secondary" id="copyAllRepliesBtn" style="margin-top: 10px; font-size: 0.85rem;">نسخ جميع الردود كحزمة واحدة 📋</button>
+              </div>
+
+              <!-- Fix 4: Media & Photos -->
+              <div class="fix-box" id="fixBoxMedia">
+                <div class="fix-box-header">
+                  <div class="fix-box-title">
+                    <input type="checkbox" class="fix-checkbox" id="checkMedia" data-gain="8">
+                    <label for="checkMedia"><strong>4. الصور الدورية وشعار النشاط (Media Assets)</strong></label>
+                  </div>
+                  <span class="gain-badge">+8 نقاط سيو</span>
+                </div>
+                <p class="fix-desc">الأنشطة التي ترفع صوراً أسبوعية تحصل على 42% طلبات اتجاهات (Directions) أكثر طبقاً لإحصائيات جوجل الرسمية.</p>
+                <div class="fix-media-tips">
+                  <div class="media-tip-item">📸 رفع 3 صور حقيقية عالية الجودة لمقر العمل أو المنتجات أسبوعياً.</div>
+                  <div class="media-tip-item">🏷️ تسمية ملفات الصور بأسماء الخدمات والمدينة قبل رفعها (Geo-Tagging).</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

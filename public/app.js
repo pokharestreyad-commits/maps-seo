@@ -276,6 +276,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Render AI Suite
     renderAiSuite(recommendations);
 
+    // 4. Render Calendar
+    renderCalendar(recommendations, business);
+
+    // 5. Render Fix Center
+    renderFixCenter(data);
+
     // Show Results Section
     resultsSection.classList.remove('hidden');
     resultsSection.scrollIntoView({ behavior: 'smooth' });
@@ -368,7 +374,246 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     });
   }
+
+  // 4. Content & Scheduling Calendar
+  function renderCalendar(rec, business) {
+    const timeline = document.getElementById('scheduledPostsTimeline');
+    if (!timeline) return;
+    timeline.innerHTML = '';
+    const posts = rec?.aiGeneratedPosts || [];
+
+    const SCHEDULE_DAYS = [
+      { day: 'الأحد', time: '11:30 ص', tip: 'ذروة بحث وتصفح العملاء' },
+      { day: 'الثلاثاء', time: '01:15 م', tip: 'استراحة منتصف الأسبوع' },
+      { day: 'الخميس', time: '06:00 م', tip: 'ذروة عطلة نهاية الأسبوع' }
+    ];
+
+    if (posts.length === 0) {
+      timeline.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">سيتم توليد منشورات الجدولة تلقائياً عند فحص النشاط التجاري.</p>';
+      return;
+    }
+
+    posts.forEach((p, idx) => {
+      const schedule = SCHEDULE_DAYS[idx % SCHEDULE_DAYS.length];
+      const card = document.createElement('div');
+      card.className = 'timeline-card';
+      card.innerHTML = `
+        <div>
+          <div class="timeline-card-header">
+            <span class="timeline-day-badge">📅 ${schedule.day} (${schedule.time})</span>
+            <span class="timeline-time-badge">${schedule.tip}</span>
+          </div>
+          <div class="timeline-hook">${p.hook}</div>
+          <div class="timeline-body">${p.body}</div>
+          <span class="timeline-cta-badge">🎯 زر الإجراء: [${p.callToAction || 'اتصل الآن'}]</span>
+        </div>
+        <div class="timeline-actions">
+          <button class="btn-publish-now" onclick="publishDirectlyToGoogle(${idx})">نشر فوري في خرائط جوجل 🚀</button>
+          <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;" onclick="copyPostFull(${idx})">نسخ النص 📋</button>
+        </div>
+      `;
+      timeline.appendChild(card);
+    });
+
+    window._currentPosts = posts;
+    window._currentBusiness = business;
+
+    // Export Schedule CSV
+    const exportBtn = document.getElementById('exportScheduleBtn');
+    if (exportBtn) {
+      exportBtn.onclick = () => {
+        let csvContent = '\uFEFF';
+        csvContent += 'اليوم,الوقت الموصى به,العنوان الخاطف,نص المنشور,زر الإجراء\n';
+        posts.forEach((p, idx) => {
+          const schedule = SCHEDULE_DAYS[idx % SCHEDULE_DAYS.length];
+          const cleanBody = (p.body || '').replace(/"/g, '""');
+          const cleanHook = (p.hook || '').replace(/"/g, '""');
+          csvContent += `"${schedule.day}","${schedule.time}","${cleanHook}","${cleanBody}","${p.callToAction || 'اتصل الآن'}"\n`;
+        });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `جدول-منشورات-خرائط-جوجل-${(business?.name || 'نشاط').replace(/\s+/g, '_')}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+    }
+  }
+
+  // 5. 1-Click Fix Center
+  function renderFixCenter(data) {
+    const currentScore = data.audit?.overallScore || 0;
+    const simCurrent = document.getElementById('simCurrentScore');
+    const simTarget = document.getElementById('simTargetScore');
+    if (simCurrent) simCurrent.textContent = currentScore;
+    if (simTarget) simTarget.textContent = Math.min(100, currentScore + 27);
+
+    // Categories
+    const fixCatList = document.getElementById('fixCatList');
+    if (fixCatList) {
+      fixCatList.innerHTML = '';
+      const missingCats = data.competitorsAnalysis?.missingValuableCategories || [];
+      if (missingCats.length === 0) {
+        fixCatList.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">تصنيفاتك مكتملة ومطابقة لأفضل المنافسين!</span>';
+      } else {
+        missingCats.forEach(c => {
+          fixCatList.innerHTML += `<span class="fix-cat-tag">+ ${c.category}</span>`;
+        });
+      }
+    }
+
+    const copyCatsBtn = document.getElementById('copyCatsBtn');
+    if (copyCatsBtn) {
+      copyCatsBtn.onclick = () => {
+        const missingCats = data.competitorsAnalysis?.missingValuableCategories || [];
+        const catNames = missingCats.map(c => c.category).join('، ');
+        navigator.clipboard.writeText(catNames || data.business?.category || '').then(() => {
+          showToast('تم نسخ الفئات المقترحة بنجاح 📋');
+        });
+      };
+    }
+
+    // Description
+    const fixDescContent = document.getElementById('fixDescContent');
+    if (fixDescContent) {
+      fixDescContent.textContent = data.recommendations?.aiGeneratedDescription?.description || 'لا يوجد وصف مقترح حالياً.';
+    }
+
+    // Reviews Batch
+    const fixReviewsBatch = document.getElementById('fixReviewsBatch');
+    const replies = data.recommendations?.aiReviewResponses || [];
+    if (fixReviewsBatch) {
+      fixReviewsBatch.innerHTML = '';
+      if (replies.length === 0) {
+        fixReviewsBatch.innerHTML = '<p style="color: var(--text-muted); font-size: 0.84rem;">لا توجد تقييمات معلقة غير مجاب عليها.</p>';
+      } else {
+        replies.slice(0, 3).forEach(r => {
+          fixReviewsBatch.innerHTML += `
+            <div style="background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.82rem;">
+              <strong>${r.author}:</strong> ${r.aiGeneratedReply}
+            </div>
+          `;
+        });
+      }
+    }
+
+    const copyAllRepliesBtn = document.getElementById('copyAllRepliesBtn');
+    if (copyAllRepliesBtn) {
+      copyAllRepliesBtn.onclick = () => {
+        const text = replies.map(r => `العميل: ${r.author} (${r.rating} نجوم)\nالرد: ${r.aiGeneratedReply}\n---`).join('\n\n');
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('تم نسخ جميع الردود كحزمة واحدة 📋');
+        });
+      };
+    }
+
+    // Simulation Checkbox dynamic score update
+    const checkboxes = document.querySelectorAll('.fix-checkbox');
+    checkboxes.forEach(chk => {
+      chk.checked = true;
+      chk.onchange = updateSimulation;
+    });
+
+    function updateSimulation() {
+      let totalGains = 0;
+      checkboxes.forEach(chk => {
+        if (chk.checked) {
+          totalGains += parseInt(chk.getAttribute('data-gain') || 0, 10);
+        }
+      });
+      const projected = Math.min(100, currentScore + totalGains);
+      if (simTarget) simTarget.textContent = projected;
+    }
+
+    // Download Action Pack File
+    const downloadBtn = document.getElementById('downloadFixPackBtn');
+    if (downloadBtn) {
+      downloadBtn.onclick = () => {
+        const biz = data.business || {};
+        const missingCats = data.competitorsAnalysis?.missingValuableCategories || [];
+        const cats = missingCats.map(c => `  - ${c.category}`).join('\n');
+        const desc = data.recommendations?.aiGeneratedDescription?.description || 'لم يتم توليد وصف';
+        const reps = replies.map(r => `• العميل (${r.author} - ${r.rating} نجوم):\nالرد: ${r.aiGeneratedReply}`).join('\n\n');
+        const postsList = (data.recommendations?.aiGeneratedPosts || []).map((p, i) => `[منشور ${i+1}]:\nالعنوان: ${p.hook}\nالنص: ${p.body}\nزر الإجراء: ${p.callToAction}`).join('\n\n');
+
+        const content = `========================================================================
+📑 حزمة الإصلاح الفوري وخطة تصدر خرائط جوجل (Maps SEO Action Pack)
+المنصة: https://seo.raslans.net | مدعوم بنظام الذكاء الاصطناعي 120B
+النشاط: ${biz.name || 'النشاط التجاري'}
+العنوان: ${biz.address || 'العنوان'}
+السكور الحالي: ${currentScore}/100 | السكور المستهدف بعد التطبيق: 95/100
+تاريخ الإصدار: ${new Date().toLocaleDateString('ar-EG')}
+========================================================================
+
+1️⃣ التصنيفات والفئات المقترحة للإضافة في بطاقة جوجل بيزنس:
+الفئة الرئيسية: ${biz.category || ''}
+الفئات الثانوية الموصى بإضافتها فوراً (للتفوق على المنافسين):
+${cats || '  - تصنيفاتك الحالية جيدة ومكتملة'}
+
+------------------------------------------------------------------------
+2️⃣ الوصف المعتمد والمحسن لمحركات البحث (750 حرف متوافق مع خوارزميات جوجل):
+${desc}
+
+------------------------------------------------------------------------
+3️⃣ الردود الذكية الجاهزة على مراجعات العملاء:
+${reps || 'لا توجد تقييمات معلقة'}
+
+------------------------------------------------------------------------
+4️⃣ جدول المنشورات والعروض الأسبوعية (Freshness Signals):
+${postsList}
+
+------------------------------------------------------------------------
+✅ قائمة التحقق السريعة لتنفيذ التحسينات:
+[ ] إضافة الفئات الموصى بها في إعدادات "فئات الأنشطة التجارية"
+[ ] نسخ الوصف ولصقه في خانة "الوصف" في بطاقة جوجل
+[ ] نشر الردود على العملاء المعلقين لرفع مؤشر التفاعل
+[ ] جدولة منشورات الأسبوع بانتظام
+========================================================================`;
+
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `حزمة-إصلاح-سيو-خرائط-جوجل-${(biz.name || 'نشاط').replace(/\s+/g, '_')}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+    }
+  }
 });
+
+// Toast notification helper
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (toast) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+}
+
+// Global publish direct to Google handler
+window.publishDirectlyToGoogle = function(idx) {
+  const post = window._currentPosts?.[idx];
+  if (!post) return;
+  const fullText = `${post.hook}\n\n${post.body}\n\n[إجراء: ${post.callToAction || 'اتصل الآن'}]`;
+  navigator.clipboard.writeText(fullText).then(() => {
+    showToast('🚀 تم نسخ المنشور! جاري توجيهك لبطاقة نشاطك...');
+    setTimeout(() => {
+      window.open('https://business.google.com/locations', '_blank');
+    }, 800);
+  });
+};
+
+window.copyPostFull = function(idx) {
+  const post = window._currentPosts?.[idx];
+  if (!post) return;
+  const fullText = `${post.hook}\n\n${post.body}\n\n[إجراء: ${post.callToAction || 'اتصل الآن'}]`;
+  navigator.clipboard.writeText(fullText).then(() => {
+    showToast('تم نسخ المنشور بالكامل بنجاح 📋');
+  });
+};
 
 // Global copy helper
 window.copyElementText = function(elemId) {
@@ -376,10 +621,6 @@ window.copyElementText = function(elemId) {
   if (!el) return;
   const text = el.innerText || el.textContent;
   navigator.clipboard.writeText(text).then(() => {
-    const toast = document.getElementById('toast');
-    if (toast) {
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
-    }
+    showToast('تم النسخ بنجاح! 📋');
   });
 };
