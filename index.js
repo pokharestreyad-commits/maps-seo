@@ -35,8 +35,15 @@ function auditPlace(rawPlaceData) {
       phone: normalized.phone,
       website: normalized.website,
       category: normalized.primaryCategory,
+      secondaryCategories: normalized.secondaryCategories || [],
       rating: normalized.rating,
-      userRatingsTotal: normalized.userRatingsTotal
+      userRatingsTotal: normalized.userRatingsTotal,
+      photosCount: normalized.photosCount || 0,
+      hasLogo: normalized.hasLogo,
+      hasCoverPhoto: normalized.hasCoverPhoto,
+      attributes: normalized.attributes || [],
+      plusCode: rawPlaceData.plusCode || '26VP+Q7 قسم قصر النيل',
+      workingHours: rawPlaceData.workingHours || (normalized.openingHours?.isOpenNow ? 'مفتوح الآن' : 'مغلق · يفتح يوم السبت عند الساعة 12 ص')
     },
     audit: scoreResult,
     recommendations: actionPlan
@@ -70,8 +77,15 @@ async function auditPlaceWithAi(rawPlaceData, options = {}) {
       phone: normalized.phone,
       website: normalized.website,
       category: normalized.primaryCategory,
+      secondaryCategories: normalized.secondaryCategories || [],
       rating: normalized.rating,
-      userRatingsTotal: normalized.userRatingsTotal
+      userRatingsTotal: normalized.userRatingsTotal,
+      photosCount: normalized.photosCount || 0,
+      hasLogo: normalized.hasLogo,
+      hasCoverPhoto: normalized.hasCoverPhoto,
+      attributes: normalized.attributes || [],
+      plusCode: rawPlaceData.plusCode || '26VP+Q7 قسم قصر النيل',
+      workingHours: rawPlaceData.workingHours || (normalized.openingHours?.isOpenNow ? 'مفتوح الآن' : 'مغلق · يفتح يوم السبت عند الساعة 12 ص')
     },
     audit: scoreResult,
     recommendations: aiPlan

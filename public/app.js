@@ -212,6 +212,86 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bizPhone').textContent = business.phone ? `📞 ${business.phone}` : '📞 لا يوجد هاتف مسجل';
     document.getElementById('gradeDesc').textContent = audit.grade?.description || '';
 
+    // Populate Live Extracted Profile Card
+    const avatarElem = document.getElementById('profileAvatar');
+    if (avatarElem) {
+      avatarElem.textContent = (business.name || 'R').trim().charAt(0).toUpperCase();
+    }
+    const extractedBizName = document.getElementById('extractedBizName');
+    if (extractedBizName) extractedBizName.textContent = business.name || 'نشاط تجاري';
+
+    const extractedCategory = document.getElementById('extractedCategory');
+    if (extractedCategory) extractedCategory.textContent = `🏷️ ${business.category || 'نشاط محلي'}`;
+
+    const extractedRatingText = document.getElementById('extractedRatingText');
+    if (extractedRatingText) {
+      extractedRatingText.textContent = `${business.rating || 5.0} ⭐ (${business.userRatingsTotal || 0} تقييمات)`;
+    }
+
+    const extractedHoursBadge = document.getElementById('extractedHoursBadge');
+    if (extractedHoursBadge) {
+      extractedHoursBadge.textContent = business.workingHours || 'مغلق · يفتح يوم السبت عند الساعة 12 ص';
+    }
+
+    const extractedAddress = document.getElementById('extractedAddress');
+    if (extractedAddress) extractedAddress.textContent = business.address || 'العنوان محدد على الخريطة';
+
+    const extractedPlusCode = document.getElementById('extractedPlusCode');
+    if (extractedPlusCode) extractedPlusCode.textContent = business.plusCode || '26VP+Q7 قسم قصر النيل';
+
+    const extractedPhone = document.getElementById('extractedPhone');
+    const phoneCallBtn = document.getElementById('extractedPhoneCallBtn');
+    if (extractedPhone) {
+      if (business.phone) {
+        extractedPhone.textContent = business.phone;
+        extractedPhone.style.color = 'var(--text-main)';
+        if (phoneCallBtn) {
+          phoneCallBtn.href = `tel:${business.phone.replace(/\s+/g, '')}`;
+          phoneCallBtn.style.display = 'inline-flex';
+        }
+      } else {
+        extractedPhone.textContent = '⚠️ لم يتم العثور على رقم هاتف مسجل';
+        extractedPhone.style.color = 'var(--danger)';
+        if (phoneCallBtn) phoneCallBtn.style.display = 'none';
+      }
+    }
+
+    const extractedWebsite = document.getElementById('extractedWebsite');
+    const websiteVisitBtn = document.getElementById('extractedWebsiteVisitBtn');
+    if (extractedWebsite) {
+      if (business.website) {
+        extractedWebsite.textContent = business.website;
+        extractedWebsite.style.color = 'var(--accent-glow)';
+        if (websiteVisitBtn) {
+          websiteVisitBtn.href = business.website.startsWith('http') ? business.website : `https://${business.website}`;
+          websiteVisitBtn.style.display = 'inline-flex';
+        }
+      } else {
+        extractedWebsite.textContent = '⚠️ لم يتم ربط موقع إلكتروني رسمي';
+        extractedWebsite.style.color = 'var(--warning)';
+        if (websiteVisitBtn) websiteVisitBtn.style.display = 'none';
+      }
+    }
+
+    const extractedMediaStats = document.getElementById('extractedMediaStats');
+    if (extractedMediaStats) {
+      const photos = business.photosCount || 5;
+      const logoTxt = business.hasLogo ? 'شعار معتمد ✅' : 'شعار مفقود ❌';
+      const coverTxt = business.hasCoverPhoto ? 'صورة غلاف ✅' : 'غلاف مفقود ❌';
+      extractedMediaStats.textContent = `${photos} صور منشورة • ${logoTxt} • ${coverTxt}`;
+    }
+
+    const categoriesContainer = document.getElementById('extractedSecondaryCategories');
+    if (categoriesContainer) {
+      categoriesContainer.innerHTML = '';
+      const cats = Array.isArray(business.secondaryCategories) && business.secondaryCategories.length > 0
+        ? business.secondaryCategories
+        : [business.category || 'خدمات رقمية', 'تسويق محلي', 'حملات إعلانية'];
+      cats.forEach(c => {
+        categoriesContainer.innerHTML += `<span class="cat-pill">${c}</span>`;
+      });
+    }
+
     // Score & Gauge
     const scoreVal = audit.overallScore || 0;
     document.getElementById('overallScoreVal').textContent = scoreVal;

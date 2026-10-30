@@ -11,27 +11,27 @@
 async function expandShortUrl(shortUrl) {
   try {
     const response = await fetch(shortUrl, {
-      method: 'HEAD',
+      method: 'GET',
       redirect: 'follow',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'ar-EG,ar;q=0.9,en;q=0.8'
       }
     });
-    return response.url || shortUrl;
-  } catch (err) {
-    // If HEAD fails, try GET with a quick abort
-    try {
-      const response = await fetch(shortUrl, {
-        method: 'GET',
-        redirect: 'follow',
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
-      });
-      return response.url || shortUrl;
-    } catch {
-      return shortUrl;
+    let finalUrl = response.url || shortUrl;
+    if (finalUrl === shortUrl || finalUrl.includes('maps.app.goo.gl')) {
+      const html = await response.text();
+      const metaRefresh = html.match(/content=["']\d+;\s*url=([^"']+)["']/i);
+      if (metaRefresh) return metaRefresh[1];
+      const canonical = html.match(/<link\s+[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["']/i) ||
+                        html.match(/<link\s+[^>]*href=["']([^"']+)["'][^>]*rel=["']canonical["']/i);
+      if (canonical) return canonical[1];
+      const aHref = html.match(/<a\s+[^>]*href=["'](https?:\/\/[^"']*(?:google\.com\/maps|maps\.google)[^"']*)["']/i);
+      if (aHref) return aHref[1];
     }
+    return finalUrl;
+  } catch {
+    return shortUrl;
   }
 }
 
