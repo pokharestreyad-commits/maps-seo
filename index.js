@@ -10,7 +10,6 @@ const { compareWithCompetitors } = require('./rules/competitorBenchmark');
 const { fetchPlaceData, extractServicesFromWebsite, generateWebsiteServicesCampaign } = require('./fetcher/index');
 const { generateHtmlReport } = require('./reporter/index');
 const ai = require('./ai/index');
-const scheduler = require('./scheduler/index');
 
 /**
  * Runs a complete Local SEO audit on raw place data (Fast / Synchronous).
@@ -136,6 +135,8 @@ module.exports = {
   generateHtmlReport,
   extractServicesFromWebsite,
   generateWebsiteServicesCampaign,
-  scheduler,
+  get scheduler() {
+    return require('./scheduler/index');
+  },
   ai
 };

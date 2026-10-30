@@ -5,7 +5,14 @@
 
 const path = require('path');
 const fs = require('fs');
-const puppeteer = require('puppeteer-core');
+let puppeteerModule = null;
+async function getPuppeteer() {
+  if (!puppeteerModule) {
+    const mod = await import('puppeteer-core');
+    puppeteerModule = mod.default || mod;
+  }
+  return puppeteerModule;
+}
 
 const os = require('os');
 
@@ -30,6 +37,7 @@ async function openLoginSession() {
   console.log('🚀 جاري فتح متصفح جوجل كروم لتسجيل الدخول مرة واحدة...');
   console.log('💡 قم بتسجيل الدخول إلى حساب جوجل الذي يدير نشاطك التجاري.');
 
+  const puppeteer = await getPuppeteer();
   const browser = await puppeteer.launch({
     executablePath: CHROME_PATH,
     headless: false,
@@ -71,6 +79,7 @@ async function publishPost(postData = {}) {
 
   console.log(`[BrowserPoster] جاري بدء أتمتة النشر لـ "${businessName || 'نشاطك'}"...`);
 
+  const puppeteer = await getPuppeteer();
   const wsEndpoint = postData.browserWSEndpoint || process.env.BROWSERLESS_WS_ENDPOINT;
   let browser;
 
