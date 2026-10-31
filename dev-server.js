@@ -6,7 +6,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const auditHandler = require('./api/audit');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -25,28 +24,39 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = url.pathname;
 
-  // 1. API Route: /api/audit
-  if (pathname === '/api/audit' || pathname === '/api/audit/') {
-    let bodyStr = '';
-    req.on('data', chunk => { bodyStr += chunk; });
-    req.on('end', async () => {
-      req.body = bodyStr ? JSON.parse(bodyStr) : {};
-      
-      // Minimal Express/Vercel res mock
-      res.status = function(code) { res.statusCode = code; return res; };
-      res.json = function(data) {
-        res.setHeader('Content-Type', 'application/json; charset=utf-8');
-        res.end(JSON.stringify(data));
-      };
+  // 1. API Routes: /api/*
+  if (pathname.startsWith('/api/')) {
+    const routeName = pathname.replace('/api/', '').replace(/\/$/, '');
+    const apiFile = path.join(__dirname, 'api', `${routeName}.js`);
 
-      try {
-        await auditHandler(req, res);
-      } catch (err) {
-        res.statusCode = 500;
-        res.end(JSON.stringify({ success: false, error: err.message }));
-      }
-    });
-    return;
+    if (fs.existsSync(apiFile)) {
+      let bodyStr = '';
+      req.on('data', chunk => { bodyStr += chunk; });
+      req.on('end', async () => {
+        try {
+          req.body = bodyStr ? JSON.parse(bodyStr) : {};
+        } catch {
+          req.body = bodyStr;
+        }
+
+        // Minimal Express/Vercel res mock
+        res.status = function(code) { res.statusCode = code; return res; };
+        res.json = function(data) {
+          res.setHeader('Content-Type', 'application/json; charset=utf-8');
+          res.end(JSON.stringify(data));
+        };
+
+        try {
+          const handler = require(apiFile);
+          await handler(req, res);
+        } catch (err) {
+          console.error(`Error in /api/${routeName}:`, err);
+          res.statusCode = 500;
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return;
+    }
   }
 
   // 2. Static File Serving: public/

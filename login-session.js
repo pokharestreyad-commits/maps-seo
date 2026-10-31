@@ -42,6 +42,17 @@ async function main() {
           console.log(`✅ تم استخراج وحفظ ${result.cookiesCount} كوكيز سحابية بنجاح تام!`);
           console.log('🚀 تم تفعيل الجلسة السحابية في cloud_session.json تلقائياً!');
           console.log('============================================================\n');
+
+          try {
+            const { sendTelegramMessage } = require('./local-worker/telegramNotifier');
+            await sendTelegramMessage(`
+🎉 <b>تم تسجيل الدخول بنجاح تام! 🔐</b>
+━━━━━━━━━━━━━━━━━━
+🏢 <b>الحساب المعتمد:</b> رسلان للتسويق
+🍪 <b>الكوكيز المحفوظة:</b> ${result.cookiesCount} كوكيز
+🚀 <b>الحالة:</b> تم حفظ الجلسة بنجاح، والروبوت جاهز الآن لنشر المنشورات تلقائياً بدون أي كابتشا!
+            `.trim());
+          } catch {}
         }
       } catch (err) {}
     }

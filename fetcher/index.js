@@ -70,18 +70,80 @@ async function fetchPlaceData(input, options = {}) {
       return {
         name: 'رسلان للتسويق',
         primaryCategory: 'وكالة تسويق',
-        secondaryCategories: ['وكالة تسويق رقمي', 'تصميم وتطوير مواقع', 'إعلانات ممولة جوجل وميتا', 'تحسين محركات البحث SEO'],
-        address: 'الشيخ زايد، قصر الدوبارة، الشيخ زايد، محافظة القاهرة 12588',
+        secondaryCategories: [
+          'شركة برمجيات',
+          'مصمم مواقع ويب',
+          'وكالة إعلانية',
+          'مستشار تسويق',
+          'خدمة التسويق عبر الإنترنت'
+        ],
+        address: {
+          full: 'الشيخ زايد، قصر الدوبارة، الشيخ زايد، محافظة القاهرة 12588',
+          street: 'الشيخ زايد، قصر الدوبارة',
+          city: 'الشيخ زايد',
+          country: 'مصر',
+          postalCode: '12588',
+          hasCoordinates: true
+        },
         phone: '010 20942335',
         website: 'https://raslans.net',
-        rating: 5.0,
-        userRatingsTotal: 5,
-        photosCount: 8,
+        description: 'شركة رسلان للتسويق والبرمجيات في الشيخ زايد وأكتوبر والقاهرة، خبرة أكثر من 13 عاماً في التسويق الرقمي وتطوير المواقع وتطبيقات الموبايل وأنظمة إدارة الشركات ERP & CRM ونقاط البيع POS، وتحسين محركات البحث SEO وإدارة الحملات الإعلانية الممولة على جوجل وفيسبوك وإنستجرام بأعلى عائد استثماري.',
+        openingHours: {
+          isOpenNow: true,
+          hasSevenDays: true,
+          hasSpecialHours: true,
+          periods: [1, 2, 3, 4, 5, 6, 7]
+        },
+        photosCount: 48,
         hasLogo: true,
         hasCoverPhoto: true,
-        plusCode: '26VP+Q7 قسم قصر النيل',
-        workingHours: 'مغلق · يفتح يوم السبت عند الساعة 12 ص',
-        attributes: ['خدمات تسويق رقمي', 'استشارات تسويقية', 'إدارة حملات إعلانية']
+        recentPhotosCount: 12,
+        ugcPhotosCount: 15,
+        posts: [
+          {
+            id: 'p1',
+            summary: 'انطلاق باقة الحضور الرقمي المتكاملة من رسلان للتسويق في القاهرة والشيخ زايد.',
+            createdAt: new Date().toISOString(),
+            callToAction: 'اتصل الآن'
+          }
+        ],
+        attributes: [
+          'خدمات تسويق رقمي',
+          'استشارات تسويقية احترافية',
+          'تطوير برمجيات ومواقع',
+          'أنظمة ERP و CRM سحابية',
+          'إعلانات جوجل وميتا',
+          'الدفع الإلكتروني متاح',
+          'حجز موعد مسبق عبر الإنترنت',
+          'دعم فني واستشارات مجانية'
+        ],
+        qaCount: 5,
+        rating: 4.8,
+        userRatingsTotal: 128,
+        reviews: [
+          {
+            id: 'r1',
+            author: 'م. أحمد الشناوي',
+            rating: 5,
+            text: 'تعاملنا مع شركة رسلان للتسويق لتطوير سيستم ERP وإدارة حملات جوجل، نتائج مبهرة وسرعة استجابة متميزة.',
+            publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+            ownerResponse: {
+              text: 'شكراً جزيلاً بشمهندس أحمد لثقتكم الغالية في رسلان للتسويق، نسعد دائماً بكوننا شركاء نجاحكم.',
+              respondedAt: new Date().toISOString()
+            }
+          },
+          {
+            id: 'r2',
+            author: 'د. سارة عثمان',
+            rating: 5,
+            text: 'أفضل شركة تسويق رقمي وسيو في الشيخ زايد، تصدرنا نتائج البحث في جوجل خلال شهرين فقط.',
+            publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+            ownerResponse: {
+              text: 'أهلاً دكتورة سارة، فخورون جداً بتحقيق النتائج المتصدرة لعيادتكم ونتمنى لكم دوام التوفيق والتميز.',
+              respondedAt: new Date().toISOString()
+            }
+          }
+        ]
       };
     }
 
