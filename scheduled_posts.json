@@ -261,10 +261,11 @@
     "callToAction": "اتصل الآن",
     "scheduledFor": "2026-11-01T18:15:00.000Z",
     "scheduledDateFormatted": "الأحد، ١ نوفمبر ٢٠٢٦ في ٠٨:١٥ م",
-    "status": "PENDING",
+    "status": "FAILED",
     "createdAt": "2026-10-31T10:16:31.137Z",
     "imagePath": "D:\\maps seo\\raslan_erp_branded.jpg",
-    "batch": "6_MONTHS_PLAN"
+    "batch": "6_MONTHS_PLAN",
+    "error": "Browser was not found at the configured executablePath (C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe)"
   },
   {
     "id": "post_sched_6m_2_1793441791138",
