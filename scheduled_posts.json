@@ -306,10 +306,11 @@
     "callToAction": "اتصل الآن",
     "scheduledFor": "2026-11-08T08:15:00.000Z",
     "scheduledDateFormatted": "الأحد، ٨ نوفمبر ٢٠٢٦ في ١٠:١٥ ص",
-    "status": "PENDING",
+    "status": "FAILED",
     "createdAt": "2026-10-31T10:16:31.137Z",
     "imagePath": "C:\\Users\\DELL\\Downloads\\تصميمات الشهر\\2جوجل ادز.png",
-    "batch": "6_MONTHS_PLAN"
+    "batch": "6_MONTHS_PLAN",
+    "error": "Browser was not found at the configured executablePath (C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe)"
   },
   {
     "id": "post_sched_6m_5_1793441791141",
