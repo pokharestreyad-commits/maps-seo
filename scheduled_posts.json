@@ -321,10 +321,11 @@
     "callToAction": "اتصل الآن",
     "scheduledFor": "2026-11-10T12:10:00.000Z",
     "scheduledDateFormatted": "الثلاثاء، ١٠ نوفمبر ٢٠٢٦ في ٠٢:١٠ م",
-    "status": "PENDING",
+    "status": "FAILED",
     "createdAt": "2026-10-31T10:16:31.137Z",
     "imagePath": "D:\\maps seo\\raslan_restaurant_branded.jpg",
-    "batch": "6_MONTHS_PLAN"
+    "batch": "6_MONTHS_PLAN",
+    "error": "Browser was not found at the configured executablePath (C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe)"
   },
   {
     "id": "post_sched_6m_6_1793441791142",
