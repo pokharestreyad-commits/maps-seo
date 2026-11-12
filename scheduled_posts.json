@@ -336,10 +336,11 @@
     "callToAction": "اتصل الآن",
     "scheduledFor": "2026-11-12T09:45:00.000Z",
     "scheduledDateFormatted": "الخميس، ١٢ نوفمبر ٢٠٢٦ في ١١:٤٥ ص",
-    "status": "PENDING",
+    "status": "FAILED",
     "createdAt": "2026-10-31T10:16:31.138Z",
     "imagePath": "C:\\Users\\DELL\\Downloads\\تصميمات الشهر\\3اعلانات ميتا.png",
-    "batch": "6_MONTHS_PLAN"
+    "batch": "6_MONTHS_PLAN",
+    "error": "Browser was not found at the configured executablePath (C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe)"
   },
   {
     "id": "post_sched_6m_7_1793441791144",
